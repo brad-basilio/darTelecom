@@ -37,7 +37,7 @@ class Products extends Model
         'imagen',
 
         'especificaciones',
-
+'especificaciones_json',
         'album',
         'manuales',
 
@@ -47,6 +47,9 @@ class Products extends Model
 
         'visible',
         'status'
+    ];
+    protected $casts = [
+        'especificaciones_json' => 'array',
     ];
 
     public function category()

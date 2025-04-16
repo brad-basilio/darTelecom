@@ -104,7 +104,7 @@
 
 
         // 1️⃣ **Recuperar contenido desde la base de datos**
-        const descriptionData = `{!! $blog->content ?? '' !!}`;
+        const descriptionData = `{!! $terms->content ?? '' !!}`;
 
 
         // 2️⃣ **Insertar contenido en Quill (usar clipboard.dangerouslyPasteHTML)**
@@ -112,7 +112,7 @@
 
 
         // Obtener los valores de Quill antes de enviar el formulario
-        document.getElementById("pol-form").addEventListener("submit", function() {
+        document.getElementById("term-form").addEventListener("submit", function() {
             document.getElementById("content").value = quillDescription.root.innerHTML;
 
         });

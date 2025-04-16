@@ -75,136 +75,141 @@ class ProductsController extends Controller
    * Store a newly created resource in storage.
    */
 
-  public function store(Request $request)
-  {
-
-
-    $request->validate([
-      'producto' => 'required|string|max:255',
-      'extract' => 'nullable|string|max:255',
-      'description' => 'nullable|string',
-      'precio' => 'nullable|numeric|min:0',
-      'stock' => 'nullable|numeric|min:0',
-      'categoria_id' => 'required|exists:categories,id',
-      'brand_id' => 'required|exists:brands,id',
-      'especificaciones' => 'nullable|string',
-      'destacado' => 'nullable|boolean',
-      'visible' => 'nullable|boolean',
-      'status' => 'nullable|boolean',
-    ]);
-
-    $data = $request->all();
-    // Verificar si ya existe un producto con el mismo nombre (excluyendo el producto actual)
-    $existingSlug = Products::where('slug', Str::slug($request->producto))->first();
-    if ($existingSlug) {
-      $data['slug'] = Str::slug($request->producto) . '-' . uniqid();
-    } else {
-      $data['slug'] = Str::slug($request->producto);
-    }
-
-
-    try {
-      // **Paso 1: Crear la carpeta principal "Productos" si no existe**
-      $mainFolder = 'Productos';
-      $pathMainFolder = public_path('storage/images/albums/' . $mainFolder);
-      if (!is_dir($pathMainFolder)) {
-        mkdir($pathMainFolder, 0777, true);
-      }
-
-      // **Paso 2: Crear la subcarpeta con el nombre del producto**
-      $subFolder = $data['slug']; // usamos el slug del producto como nombre de la carpeta
-      $pathSubFolder = $pathMainFolder . '/' . $subFolder;
-      if (!is_dir($pathSubFolder)) {
-        mkdir($pathSubFolder, 0777, true);
-      }
-
-      // **Paso 3: Crear el álbum del producto**
-      $productosAlbum = Album::firstOrCreate([
-        'name' => 'Productos',
-      ], [
-        'description' => 'Contenedor principal para los Productos.',
-      ]);
-
-      $album = Album::updateOrCreate([
-        'name' => $subFolder,
-      ], [
-        'parent_id' => $productosAlbum->id,
-      ]);
-
-      // **Paso 4: Manejo de la imagen, ahora guardada en la carpeta del producto**
-      if ($request->hasFile("imagen")) {
-        $file = $request->file('imagen');
-        $nombreImagen = Str::random(10) . '_' . $file->getClientOriginalName();
-        $file->move($pathSubFolder, $nombreImagen);
-        $data['imagen'] = 'storage/images/albums/' . $mainFolder . '/' . $subFolder . '/' . $nombreImagen;
-      } else {
-        $data['imagen'] = 'images/img/noimagen.jpg';
-      }
-
-      // **Paso 5: Manejo de manuales**
-      if ($request->hasFile("manuales")) {
-        $file = $request->file('manuales');
-        $routearchive = 'storage/archivos/productos/';
-        $nombrearchive = Str::random(10) . '_' . $file->getClientOriginalName();
-
-        if (!file_exists($routearchive)) {
-          mkdir($routearchive, 0777, true);
-        }
-
-        $file->move($routearchive, $nombrearchive);
-        $data['manuales'] = $routearchive . $nombrearchive;
-      }
-
-      if ($request->has('en_oferta')) {
-        $data['precio_oferta'] = $request->precio_oferta;
-        $data['porcentaje_oferta'] = round((100 - ($request->precio_oferta * 100) / $request->precio), 0);
-      }
-
-      // **Paso 6: Guardar el producto en la base de datos**
-      $producto = new Products();
-      $producto->producto = $request->producto;
-      $producto->extract = $request->extract;
-      $producto->description = $request->description;
-
-
-      $producto->precio = $request->precio;
-      $producto->stock = $request->stock;
-      $producto->peso_empaque = $request->peso_empaque;
-      $producto->tipo_vendedor = $request->tipo_vendedor ?? 'Vendedor verificado';
-
-      $producto->precio_oferta =  $data['precio_oferta'] ?? '';
-      $producto->en_oferta = $request->has('en_oferta');
-      $producto->porcentaje_oferta = $data['porcentaje_oferta'] ?? '';
-      $producto->devolucion = $request->has('devolucion');
-      $producto->envio_gratis = $request->has('envio_gratis');
-      $producto->garantia_entrega = $request->has('garantia_entrega');
-
-      $producto->slug = $data['slug'];
-
-
-
-      $producto->especificaciones = $request->especificaciones;
-      $producto->categoria_id = $request->categoria_id;
-      $producto->brand_id = $request->brand_id;
-      $producto->destacado = $request->has('destacado');
-
-      $producto->album = 'storage/images/albums/' . $mainFolder . '/' . $subFolder; // Guardar ruta en el campo album
-      $producto->imagen = $data['imagen'] ?? null;
-      $producto->manuales = $data['manuales'] ?? null;
-
-      $producto->save();
-
-      $album = Album::where('name', $data['slug'])->withCount('images', 'children')->first();
-      $this->uploadImages($request, $album);
-
-      return redirect()->route('products.index')->with('success', 'Publicación creada exitosamente.');
-    } catch (ValidationException $e) {
-      return redirect()->back()->withErrors($e->validator)->withInput();
-    } catch (\Throwable $th) {
-      return redirect()->route('products.create')->with('error', 'Llenar campos obligatorios');
-    }
-  }
-
+   public function store(Request $request)
+   {
+       $request->validate([
+           'producto' => 'required|string|max:255',
+           'extract' => 'nullable|string|max:255',
+           'description' => 'nullable|string',
+           'precio' => 'nullable|numeric|min:0',
+           'stock' => 'nullable|numeric|min:0',
+           'categoria_id' => 'required|exists:categories,id',
+           'brand_id' => 'required|exists:brands,id',
+           'especificaciones_json' => 'nullable|json', // Cambiado a validación JSON
+           'destacado' => 'nullable|boolean',
+           'visible' => 'nullable|boolean',
+           'status' => 'nullable|boolean',
+       ]);
+   
+       $data = $request->all();
+       
+       // Verificar si ya existe un producto con el mismo nombre
+       $existingSlug = Products::where('slug', Str::slug($request->producto))->first();
+       if ($existingSlug) {
+           $data['slug'] = Str::slug($request->producto) . '-' . uniqid();
+       } else {
+           $data['slug'] = Str::slug($request->producto);
+       }
+   
+       try {
+           // **Paso 1: Crear la carpeta principal "Productos" si no existe**
+           $mainFolder = 'Productos';
+           $pathMainFolder = public_path('storage/images/albums/' . $mainFolder);
+           if (!is_dir($pathMainFolder)) {
+               mkdir($pathMainFolder, 0777, true);
+           }
+   
+           // **Paso 2: Crear la subcarpeta con el nombre del producto**
+           $subFolder = $data['slug'];
+           $pathSubFolder = $pathMainFolder . '/' . $subFolder;
+           if (!is_dir($pathSubFolder)) {
+               mkdir($pathSubFolder, 0777, true);
+           }
+   
+           // **Paso 3: Crear el álbum del producto**
+           $productosAlbum = Album::firstOrCreate([
+               'name' => 'Productos',
+           ], [
+               'description' => 'Contenedor principal para los Productos.',
+           ]);
+   
+           $album = Album::updateOrCreate([
+               'name' => $subFolder,
+           ], [
+               'parent_id' => $productosAlbum->id,
+           ]);
+   
+           // **Paso 4: Manejo de la imagen**
+           if ($request->hasFile("imagen")) {
+               $file = $request->file('imagen');
+               $nombreImagen = Str::random(10) . '_' . $file->getClientOriginalName();
+               $file->move($pathSubFolder, $nombreImagen);
+               $data['imagen'] = 'storage/images/albums/' . $mainFolder . '/' . $subFolder . '/' . $nombreImagen;
+           } else {
+               $data['imagen'] = 'images/img/noimagen.jpg';
+           }
+   
+           // **Paso 5: Manejo de manuales**
+           if ($request->hasFile("manuales")) {
+               $file = $request->file('manuales');
+               $routearchive = 'storage/archivos/productos/';
+               $nombrearchive = Str::random(10) . '_' . $file->getClientOriginalName();
+   
+               if (!file_exists($routearchive)) {
+                   mkdir($routearchive, 0777, true);
+               }
+   
+               $file->move($routearchive, $nombrearchive);
+               $data['manuales'] = $routearchive . $nombrearchive;
+           }
+   
+           if ($request->has('en_oferta')) {
+               $data['precio_oferta'] = $request->precio_oferta;
+               $data['porcentaje_oferta'] = round((100 - ($request->precio_oferta * 100) / $request->precio), 0);
+           }
+   
+           // **Paso 6: Procesar las especificaciones JSON**
+           $especificaciones = [];
+           if ($request->filled('especificaciones_json')) {
+               $especificaciones = json_decode($request->especificaciones_json, true);
+               
+               // Validar que el JSON tenga la estructura correcta
+               if (!is_array($especificaciones)) {
+                   throw new \Exception('El formato de las especificaciones no es válido');
+               }
+               
+               // Filtrar especificaciones vacías
+               $especificaciones = array_filter($especificaciones, function($item) {
+                   return !empty($item['titulo']) && !empty($item['descripcion']);
+               });
+           }
+   
+           // **Paso 7: Guardar el producto en la base de datos**
+           $producto = new Products();
+           $producto->producto = $request->producto;
+           $producto->extract = $request->extract;
+           $producto->description = $request->description;
+           $producto->precio = $request->precio;
+           $producto->stock = $request->stock;
+           $producto->peso_empaque = $request->peso_empaque;
+           $producto->tipo_vendedor = $request->tipo_vendedor ?? 'Vendedor verificado';
+           $producto->precio_oferta = $data['precio_oferta'] ?? null;
+           $producto->en_oferta = $request->has('en_oferta');
+           $producto->porcentaje_oferta = $data['porcentaje_oferta'] ?? null;
+           $producto->devolucion = $request->has('devolucion');
+           $producto->envio_gratis = $request->has('envio_gratis');
+           $producto->garantia_entrega = $request->has('garantia_entrega');
+           $producto->slug = $data['slug'];
+           $producto->especificaciones_json = !empty($especificaciones) ? json_encode($especificaciones) : null;
+           $producto->categoria_id = $request->categoria_id;
+           $producto->brand_id = $request->brand_id;
+           $producto->destacado = $request->has('destacado');
+           $producto->album = 'storage/images/albums/' . $mainFolder . '/' . $subFolder;
+           $producto->imagen = $data['imagen'] ?? null;
+           $producto->manuales = $data['manuales'] ?? null;
+           $producto->save();
+   
+           // **Paso 8: Subir imágenes adicionales si existen**
+           $album = Album::where('name', $data['slug'])->withCount('images', 'children')->first();
+           $this->uploadImages($request, $album);
+   
+           return redirect()->route('products.index')->with('success', 'Publicación creada exitosamente.');
+       } catch (ValidationException $e) {
+           return redirect()->back()->withErrors($e->validator)->withInput();
+       } catch (\Throwable $th) {
+           return redirect()->route('products.create')->with('error', 'Error al crear el producto: ' . $th->getMessage());
+       }
+   }
 
   /**
    * Display the specified resource.
@@ -246,124 +251,124 @@ class ProductsController extends Controller
 
   public function update(Request $request, $id)
   {
-    $request->validate([
-      'producto' => 'required|string|max:255',
-      'extract' => 'required|string|max:255',
-      'description' => 'required|string',
-      'precio' => 'required|numeric|min:0',
-      'stock' => 'required|numeric|min:0',
-      'categoria_id' => 'required|exists:categories,id',
-      'brand_id' => 'required|exists:brands,id',
-      'especificaciones' => 'required|string',
-
-      'precio_oferta' => 'nullable|numeric|min:0',
-
-      'stock' => 'required|numeric|min:0',
-
-
-      'peso_empaque' => 'required|numeric|min:0',
-
-      'tipo_vendedor' => 'nullable|string|min:0',
-
-    ]);
-    $producto = Products::findOrFail($id);
-
-    try {
-      $data = $request->all();
-
-
-      // **Paso 1: Obtener la carpeta actual del producto**
-      $mainFolder = 'Productos';
-      $subFolder = $producto->slug;
-      $pathSubFolder = public_path("storage/images/albums/{$mainFolder}/{$subFolder}");
-
-      if (!is_dir($pathSubFolder)) {
-        mkdir($pathSubFolder, 0777, true);
-      }
-
-      // **Paso 2: Actualizar el álbum**
-      $productosAlbum = Album::firstOrCreate([
-        'name' => 'Productos',
-      ], [
-        'description' => 'Contenedor principal para los Productos.',
+      $request->validate([
+          'producto' => 'required|string|max:255',
+          'extract' => 'required|string|max:255',
+          'description' => 'required|string',
+          'precio' => 'required|numeric|min:0',
+          'stock' => 'required|numeric|min:0',
+          'categoria_id' => 'required|exists:categories,id',
+          'brand_id' => 'required|exists:brands,id',
+          'especificaciones_json' => ['required', function ($attribute, $value, $fail) {
+            try {
+                $decoded = json_decode($value, true); // Decodificar como array
+                if (json_last_error() !== JSON_ERROR_NONE || !is_array($decoded)) {
+                    $fail('Las especificaciones deben ser un JSON válido.');
+                }
+            } catch (\Exception $e) {
+                $fail('Formato de especificaciones no válido');
+            }
+        }],
+          
+          'precio_oferta' => 'nullable|numeric|min:0',
+          'peso_empaque' => 'required|numeric|min:0',
+          'tipo_vendedor' => 'nullable|string|min:0',
       ]);
-
-      $album = Album::updateOrCreate(
-        ['name' => $subFolder],
-        ['parent_id' => $productosAlbum->id]
-      );
-
-      // **Paso 3: Manejo de la imagen**
-      if ($request->hasFile("imagen")) {
-        // Eliminar la imagen anterior si existe
-        if ($producto->imagen && file_exists(public_path($producto->imagen))) {
-          unlink(public_path($producto->imagen));
-        }
-
-        $file = $request->file('imagen');
-        $nombreImagen = Str::random(10) . '_' . $file->getClientOriginalName();
-        $file->move($pathSubFolder, $nombreImagen);
-        $data['imagen'] = "storage/images/albums/{$mainFolder}/{$subFolder}/{$nombreImagen}";
+  
+      $producto = Products::findOrFail($id);
+  
+      try {
+          $data = $request->all();
+  
+          // Procesar especificaciones JSON
+          $especificaciones = json_decode($request->especificaciones_json, true);
+  
+          // **Manejo de la carpeta y álbum**
+          $mainFolder = 'Productos';
+          $subFolder = $producto->slug;
+          $pathSubFolder = public_path("storage/images/albums/{$mainFolder}/{$subFolder}");
+  
+          if (!is_dir($pathSubFolder)) {
+              mkdir($pathSubFolder, 0777, true);
+          }
+  
+          $productosAlbum = Album::firstOrCreate([
+              'name' => 'Productos',
+          ], [
+              'description' => 'Contenedor principal para los Productos.',
+          ]);
+  
+          $album = Album::updateOrCreate(
+              ['name' => $subFolder],
+              ['parent_id' => $productosAlbum->id]
+          );
+  
+          // **Manejo de la imagen**
+          if ($request->hasFile("imagen")) {
+              if ($producto->imagen && file_exists(public_path($producto->imagen))) {
+                  unlink(public_path($producto->imagen));
+              }
+  
+              $file = $request->file('imagen');
+              $nombreImagen = Str::random(10) . '_' . $file->getClientOriginalName();
+              $file->move($pathSubFolder, $nombreImagen);
+              $data['imagen'] = "storage/images/albums/{$mainFolder}/{$subFolder}/{$nombreImagen}";
+          }
+  
+          // **Manejo de manuales**
+          if ($request->hasFile("manuales")) {
+              if ($producto->manuales && file_exists(public_path($producto->manuales))) {
+                  unlink(public_path($producto->manuales));
+              }
+  
+              $file = $request->file('manuales');
+              $routearchive = 'storage/archivos/productos/';
+              $nombrearchive = Str::random(10) . '_' . $file->getClientOriginalName();
+  
+              if (!is_dir(public_path($routearchive))) {
+                  mkdir(public_path($routearchive), 0777, true);
+              }
+  
+              $file->move(public_path($routearchive), $nombrearchive);
+              $data['manuales'] = $routearchive . $nombrearchive;
+          }
+  
+          if ($request->has('en_oferta')) {
+              $data['precio_oferta'] = $request->precio_oferta;
+              $data['porcentaje_oferta'] = round((100 - ($request->precio_oferta * 100) / $request->precio), 0);
+          }
+  
+          // **Actualizar el producto**
+          $producto->update([
+              'producto' => $request->producto,
+              'extract' => $request->extract,
+              'description' => $request->description,
+              'precio' => $request->precio,
+              'stock' => $request->stock,
+              'peso_empaque' => $request->peso_empaque,
+              'tipo_vendedor' => $request->tipo_vendedor ?? 'Vendedor verificado',
+              'precio_oferta' => $data['precio_oferta'] ?? null,
+              'en_oferta' => $request->has('en_oferta'),
+              'porcentaje_oferta' => $data['porcentaje_oferta'] ?? null,
+              'devolucion' => $request->has('devolucion'),
+              'envio_gratis' => $request->has('envio_gratis'),
+              'garantia_entrega' => $request->has('garantia_entrega'),
+              'especificaciones_json' => $especificaciones, // Usar el array procesado
+              'categoria_id' => $request->categoria_id,
+              'brand_id' => $request->brand_id,
+              'destacado' => $request->has('destacado'),
+              'album' => "storage/images/albums/{$mainFolder}/{$subFolder}",
+              'imagen' => $data['imagen'] ?? $producto->imagen,
+              'manuales' => $data['manuales'] ?? $producto->manuales,
+          ]);
+  
+          return redirect()->route('products.index')->with('success', 'Producto actualizado exitosamente.');
+      } catch (ValidationException $e) {
+          return redirect()->back()->withErrors($e->validator)->withInput();
+      } catch (\Throwable $th) {
+          return redirect()->route('products.edit', $id)
+              ->with('error', 'Error al actualizar el producto: ' . $th->getMessage());
       }
-
-      // **Paso 4: Manejo de manuales**
-      if ($request->hasFile("manuales")) {
-        // Eliminar manual anterior si existe
-        if ($producto->manuales && file_exists(public_path($producto->manuales))) {
-          unlink(public_path($producto->manuales));
-        }
-
-        $file = $request->file('manuales');
-        $routearchive = 'storage/archivos/productos/';
-        $nombrearchive = Str::random(10) . '_' . $file->getClientOriginalName();
-
-        if (!is_dir(public_path($routearchive))) {
-          mkdir(public_path($routearchive), 0777, true);
-        }
-
-        $file->move(public_path($routearchive), $nombrearchive);
-        $data['manuales'] = $routearchive . $nombrearchive;
-      }
-      if ($request->has('en_oferta')) {
-        $data['precio_oferta'] = $request->precio_oferta;
-        $data['porcentaje_oferta'] = round((100 - ($request->precio_oferta * 100) / $request->precio), 0);
-      }
-
-      // **Paso 5: Actualizar el producto en la base de datos**
-      $producto->update([
-        'producto' => $request->producto,
-        'extract' => $request->extract,
-        'description' => $request->description,
-        'precio' => $request->precio,
-        'stock' => $request->stock,
-        'peso_empaque' => $request->peso_empaque,
-        'tipo_vendedor' => $request->tipo_vendedor ?? 'Vendedor verificado',
-
-        'precio_oferta' =>  $data['precio_oferta'] ?? '',
-        'en_oferta' => $request->has('en_oferta'),
-        'porcentaje_oferta' => $data['porcentaje_oferta'] ?? '',
-        'devolucion' => $request->has('devolucion'),
-        'envio_gratis' => $request->has('envio_gratis'),
-        'garantia_entrega' => $request->has('garantia_entrega'),
-
-
-
-        'especificaciones' => $request->especificaciones,
-        'categoria_id' => $request->categoria_id,
-        'brand_id' => $request->brand_id,
-        'destacado' => $request->has('destacado'),
-        'album' => "storage/images/albums/{$mainFolder}/{$request->producto}",
-        'imagen' => $data['imagen'] ?? $producto->imagen,
-        'manuales' => $data['manuales'] ?? $producto->manuales,
-      ]);
-
-
-      return redirect()->route('products.index')->with('success', 'Producto actualizado exitosamente.');
-    } catch (ValidationException $e) {
-      return redirect()->back()->withErrors($e->validator)->withInput();
-    } catch (\Throwable $th) {
-      return redirect()->route('products.edit', $id)->with('error', 'Error al actualizar el producto.');
-    }
   }
 
   /**

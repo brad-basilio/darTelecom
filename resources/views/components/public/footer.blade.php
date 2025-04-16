@@ -1,12 +1,54 @@
 <style>
-    #modalPoliticasDev #modalTerminosCondiciones {
-        height: 70vh;
-        /* Establece la altura del modal al 70% de la altura de la ventana gráfica */
+    /* Estilos básicos para los modales */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        overflow: auto;
+
+    }
+
+    .modal-content {
+        background-color: #fff;
+        margin: 5% auto;
+        padding: 20px;
+        border-radius: 8px;
+        width: 90%;
+        max-width: 900px;
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .close-modal {
+        color: #aaa;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .close-modal:hover {
+        color: #000;
+    }
+
+    /* Asegúrate de que el modal-body tenga scroll */
+    .modal-body {
+        max-height: 70vh;
         overflow-y: auto;
-        /* Permite el desplazamiento vertical si el contenido excede la altura del modal */
     }
 </style>
-<footer class="bg-colorBackgroundAzulOscuro relative  overflow-hidden z-10">
+
+<footer class="bg-colorBackgroundAzulOscuro relative  overflow-hidden z-10 ">
     <div class="absolute left-0   transform  rotate-[60deg] -z-10 ">
         <img src="{{ asset('images/img/background/bg-footer.png') }}" alt="" class="w-full">
     </div>
@@ -68,7 +110,8 @@
                             class="flex justify-start items-center gap-2 text-white font-roboto font-normal text-text14">
                             <i class="fa-brands fa-tiktok fa-xl"></i>
                         </a>
-                        <a target="_blank" href="{{ $general?->whatsaap }}"
+                        <a target="_blank"
+                            href="https://wa.me/{{ $general?->whatsaap }}?text={{ $general?->mensaje_whatsapp }}."
                             class="flex justify-start items-center gap-2 text-white font-roboto font-normal text-text14">
                             <i class="fa-brands fa-whatsapp fa-xl"></i>
                         </a>
@@ -95,19 +138,28 @@
         </div>
     </div>
 
-    <div id="modalTerminosCondiciones" class="modal" style="max-width: 900px !important;width: 100% !important;  ">
-        <!-- Modal body -->
-        <div class="p-4 ">
-            <h1 class="font-gotham_bold text-2xl text-center">Terminos y condiciones</h1>
-            <p class="font-gotham_book p-2 prose">{!! $termsAndCondicitions?->content ?? '' !!}</p>
+    <!-- Añade esto en tu footer, antes del cierre </footer> -->
+    <div id="modalTerminosCondiciones" class="modal" style="display: none;max-width: 100vw;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="font-gotham_bold text-2xl">Términos y condiciones</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body p-4" style="height: 70vh; overflow-y: auto;">
+                <div class="font-gotham_book p-2 prose">{!! $termsAndCondicitions?->content ?? '' !!}</div>
+            </div>
         </div>
     </div>
 
-    <div id="modalPoliticasDev" class="modal" style="max-width: 900px !important; width: 100% !important;  ">
-        <!-- Modal body -->
-        <div class="p-4 ">
-            <h1 class="font-gotham_bold text-2xl text-center">Politicas de privacidad</h1>
-            <p class="font-gotham_book p-2 prose">{!! $politicDev?->content ?? '' !!}</p>
+    <div id="modalPoliticasDev" class="modal" style="display: none; max-width: 100vw;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="font-gotham_bold text-2xl">Políticas de privacidad</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body p-4" style="height: 70vh; overflow-y: auto;">
+                <div class="font-gotham_book p-2 prose">{!! $politicDev?->content ?? '' !!}</div>
+            </div>
         </div>
     </div>
     <div class="md:hidden absolute left-0 bottom-0   transform  rotate-[0deg] -z-10 ">
@@ -115,20 +167,40 @@
     </div>
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
     $(document).ready(function() {
-        $(document).on('click', '#linkTerminos', function() {
-            $('#modalTerminosCondiciones').modal({
-                show: true,
-                fadeDuration: 400,
-            })
+        // Función para abrir modal
+        function openModal(modalId) {
+            $('#' + modalId).fadeIn(400);
+            $('body').css('overflow', 'hidden');
+        }
+
+        // Función para cerrar modal
+        function closeModal(modalId) {
+            $('#' + modalId).fadeOut(400);
+            $('body').css('overflow', 'auto');
+        }
+
+        // Eventos para abrir modales
+        $('#linkTerminos').on('click', function() {
+            openModal('modalTerminosCondiciones');
         });
 
-        $(document).on('click', '#linkPoliticas', function() {
-            $('#modalPoliticasDev').modal({
-                show: true,
-                fadeDuration: 400,
-            })
+        $('#linkPoliticas').on('click', function() {
+            openModal('modalPoliticasDev');
+        });
+
+        // Cerrar al hacer clic en la X
+        $('.close-modal').on('click', function() {
+            closeModal($(this).closest('.modal').attr('id'));
+        });
+
+        // Cerrar al hacer clic fuera del modal
+        $(window).on('click', function(event) {
+            if ($(event.target).hasClass('modal')) {
+                closeModal($(event.target).attr('id'));
+            }
         });
     });
 </script>

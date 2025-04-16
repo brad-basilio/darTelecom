@@ -81,41 +81,57 @@ class NewsletterSubscriberController extends Controller
 
   public function saveSubscripciones(Request $request)
   {
-
-    $request->validate([
-      'email' => 'required|email',
-    ]);
-
-    $token = Crypto::randomUUID();
-    $data = $request->all();
-
-
-    $existingSubscriber = NewsletterSubscriber::where('email', $data['email'])
-      ->where('active', 0)
-      ->where('is_verified', 0)
-      ->first();
-
-    if ($existingSubscriber) {
-
-      return redirect()->route('index')->with('info', 'Usuario existente sin verificar. Revise su bandeja de entrada');
-    }
-
-
-    NewsletterSubscriber::create([
-      'email' => $data['email'],
-
-      'verification_token' => $token,
-    ]);
-
-    $verificationLink = route('verify', ['token' => $token]);
-
-    $this->validarCorreo($data, $verificationLink);
-    return redirect()->route('index')->with('success', 'Enlace de verificación enviado a su bandeja de entrada');
-
-    //
-    // return response()->with(['message' => 'Enlace de verificación enviado a su bandeja de entrada']);
+      $request->validate([
+          'email' => 'required|email',
+      ]);
+  
+      $email = $request->input('email');
+      
+      // Verificar si ya existe un suscriptor activo y verificado
+      $activeSubscriber = NewsletterSubscriber::where('email', $email)
+          ->where('active', 1)
+          ->where('is_verified', 1)
+          ->first();
+  
+      if ($activeSubscriber) {
+          return redirect()->route('index')->with('info', $request->input('email').' ya está suscrito');
+      }
+  
+      // Verificar si existe un suscriptor no verificado
+      $unverifiedSubscriber = NewsletterSubscriber::where('email', $email)
+          ->where(function($query) {
+              $query->where('active', 0)
+                    ->orWhere('is_verified', 0);
+          })
+          ->first();
+  
+      if ($unverifiedSubscriber) {
+          // Regenerar token y enviar nuevo correo de verificación
+          $token = Crypto::randomUUID();
+          $unverifiedSubscriber->update([
+              'verification_token' => $token,
+          ]);
+          
+          $verificationLink = route('verify', ['token' => $token]);
+          $this->validarCorreo(['email' => $email], $verificationLink);
+          
+          return redirect()->route('index')->with('info', 'Ya existe una suscripción no verificada. Hemos enviado un nuevo enlace de verificación.');
+      }
+  
+      // Crear nuevo suscriptor
+      $token = Crypto::randomUUID();
+      NewsletterSubscriber::create([
+          'email' => $email,
+          'verification_token' => $token,
+          'active' => 0,
+          'is_verified' => 0,
+      ]);
+  
+      $verificationLink = route('verify', ['token' => $token]);
+      $this->validarCorreo(['email' => $email], $verificationLink);
+      
+      return redirect()->route('index')->with('success', 'Enlace de verificación enviado a su bandeja de entrada');
   }
-
 
   public function verify($token)
   {

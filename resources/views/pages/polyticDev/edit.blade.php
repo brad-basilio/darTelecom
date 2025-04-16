@@ -108,7 +108,7 @@
 
 
         // 1️⃣ **Recuperar contenido desde la base de datos**
-        const descriptionData = `{!! $blog->content ?? '' !!}`;
+        const descriptionData = `{!! $terms->content ?? '' !!}`;
 
 
         // 2️⃣ **Insertar contenido en Quill (usar clipboard.dangerouslyPasteHTML)**
