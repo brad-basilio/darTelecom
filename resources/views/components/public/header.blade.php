@@ -122,7 +122,7 @@
 
     <!-- Menú desplegable para móviles -->
     <div id="menu"
-        class="hidden lg:hidden bg-colorBackgroundAzulOscuro text-textWhite shadow-lg w-full h-[calc(100vh-5rem)] fixed z-[999] top-24">
+        class="hidden lg:hidden bg-colorBackgroundAzulOscuro text-textWhite shadow-lg  w-screen max-w-[100vw] h-[calc(100vh-5rem)] fixed z-[999] top-24">
 
         <nav class="pt-8 flex flex-col justify-center items-center gap-10 text-center w-11/12 md:max-w-6xl mx-auto"
             data-aos="fade-up" data-aos-offset="150">
