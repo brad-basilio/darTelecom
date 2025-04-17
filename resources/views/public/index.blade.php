@@ -223,7 +223,7 @@
 
 
 @section('content')
-    <main class="bg-white w-screen max-w-[100vw] lg:w-full ">
+    <main class="bg-white w-screen max-w-[100vw] lg:w-full overflow-x-hidden ">
         <!-- Hero Section -->
         <section class="relative  h-screen" data-aos="zoom-in" data-aos-offset="150" data-aos-duration="1000"
             data-aos-delay="200">
