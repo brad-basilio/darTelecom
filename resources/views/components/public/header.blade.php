@@ -30,15 +30,15 @@
     }
 </style>
 
-<header class="w-screen lg:w-full z-40">
+<header class="w-full z-40">
 
     <!--  top-0-->
 
     <nav id="main-header"
-        class="fixed top-0 left-0 w-full {{ request()->routeIs('index') ? 'bg-transparent ' : 'bg-colorBackgroundAzulOscuro' }}  text-white z-10 duration-300 ">
+        class="fixed top-0 left-0 w-screen {{ request()->routeIs('index') ? 'bg-transparent ' : 'bg-colorBackgroundAzulOscuro' }}  text-white z-10 duration-300 ">
 
 
-        <div class="w-11/12 md:max-w-7xl mx-auto  flex justify-between items-center py-4">
+        <div class="w-11/12 max-w-[91.666667%] md:max-w-7xl mx-auto  flex justify-between items-center py-4">
             <a href="/" class="text-2xl font-bold">
                 <img src="{{ asset('images/img/logo/DarTelecom.png') }}" alt="Dar Telecom"
                     class="h-14 w-full object-contain" />
