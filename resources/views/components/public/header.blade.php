@@ -30,7 +30,7 @@
     }
 </style>
 
-<header class=" w-full z-40">
+<header class="w-screen lg:w-full z-40">
 
     <!--  top-0-->
 
