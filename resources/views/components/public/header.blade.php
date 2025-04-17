@@ -1,9 +1,41 @@
+<style>
+    #menuToggle,
+    #menuClose {
+        width: 33px;
+        height: 34px;
+
+        align-items: center;
+        justify-content: center;
+    }
+
+    #menuToggle svg,
+    #menuClose svg {
+        width: 100%;
+        height: 100%;
+    }
+
+    #main-header {
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    #menu {
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    #menu {
+        top: 5rem;
+        /* Asegura que esté debajo del header */
+        overflow-y: auto;
+        /* Permite scroll si el contenido es muy largo */
+    }
+</style>
+
 <header class=" w-full z-40">
 
-    <!--fixed  top-0-->
+    <!--  top-0-->
 
     <nav id="main-header"
-        class="absolute top-0 left-0 w-full {{ request()->routeIs('index') ? 'bg-transparent ' : 'bg-colorBackgroundAzulOscuro' }}  text-white z-10 duration-300 ">
+        class="fixed top-0 left-0 w-full {{ request()->routeIs('index') ? 'bg-transparent ' : 'bg-colorBackgroundAzulOscuro' }}  text-white z-10 duration-300 ">
 
 
         <div class="w-11/12 md:max-w-7xl mx-auto  flex justify-between items-center py-4">
@@ -51,12 +83,21 @@
                 <x-custom.button-cotizar :general="$general" />
             </div>
             <div class="lg:hidden flex items-center justify-end">
-                <button id="menu-toggle" class="text-white fill-white focus:outline-none">
-                    <i id="menu-icon">
+                <button id="menuToggle" class="text-white fill-white focus:outline-none">
+                    <i>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="current" width="33" height="34"
                             viewBox="0 0 448 512">
                             <path
                                 d="M0 96C0 78.3 14.3 64 32 64l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 128C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 288c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32L32 448c-17.7 0-32-14.3-32-32s14.3-32 32-32l384 0c17.7 0 32 14.3 32 32z" />
+                        </svg>
+
+                    </i>
+                </button>
+                <button id="menuClose" class=" text-white fill-white focus:outline-none hidden">
+                    <i>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+                            <path
+                                d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
                         </svg>
 
                     </i>
@@ -81,20 +122,9 @@
 
     <!-- Menú desplegable para móviles -->
     <div id="menu"
-        class="hidden lg:hidden bg-colorBackgroundAzulOscuro text-textWhite shadow-lg w-full h-screen absolute z-10">
-        <div class="lg:hidden flex items-center w-full justify-end py-8 px-4 sm:p-8">
-            <button id="menu-toggle-close" class="text-white fill-white focus:outline-none">
-                <i id="menu-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="current" width="33" height="34"
-                        viewBox="0 0 448 512">
-                        <path
-                            d="M0 96C0 78.3 14.3 64 32 64l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 128C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 288c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32L32 448c-17.7 0-32-14.3-32-32s14.3-32 32-32l384 0c17.7 0 32 14.3 32 32z" />
-                    </svg>
+        class="hidden lg:hidden bg-colorBackgroundAzulOscuro text-textWhite shadow-lg w-full h-[calc(100vh-5rem)] fixed z-[999] top-24">
 
-                </i>
-            </button>
-        </div>
-        <nav class="mb-8 flex flex-col justify-center items-center gap-10 text-center w-11/12 md:max-w-6xl mx-auto"
+        <nav class="pt-8 flex flex-col justify-center items-center gap-10 text-center w-11/12 md:max-w-6xl mx-auto"
             data-aos="fade-up" data-aos-offset="150">
             <ul class="flex space-y-6 flex-col">
                 <li>
@@ -141,43 +171,64 @@
 </header>
 
 
-
 <script>
-    /*function applyScrollStyles() {
+    // Función para aplicar estilos de scroll
+    function applyScrollStyles() {
         const header = document.getElementById('main-header');
-        const logo = document.getElementById('imagenlogo');
+        const isHomePage = "{{ request()->routeIs('index') }}" === "1";
+        const menuIsOpen = !menu.classList.contains('hidden');
 
-        if (window.scrollY > 50) {
-
-
+        // Si el menú está abierto, forzar el fondo oscuro
+        if (menuIsOpen) {
             header.classList.add('bg-colorBackgroundAzulOscuro');
             header.classList.remove('bg-transparent');
+            return;
+        }
 
+        if (!isHomePage) {
+            // Páginas que no son el inicio siempre tienen fondo oscuro
+            header.classList.add('bg-colorBackgroundAzulOscuro');
+            header.classList.remove('bg-transparent');
+            return;
+        }
 
+        // Solo para página de inicio
+        if (window.scrollY > 50) {
+            header.classList.add('bg-colorBackgroundAzulOscuro');
+            header.classList.remove('bg-transparent');
+            header.classList.add('shadow-md');
         } else {
             header.classList.add('bg-transparent');
             header.classList.remove('bg-colorBackgroundAzulOscuro');
-
-
-
+            header.classList.remove('shadow-md');
         }
-    }*/
+    }
 
-    window.addEventListener('DOMContentLoaded', applyScrollStyles);
-    window.addEventListener('scroll', applyScrollStyles);
-</script>
-<script>
-    const menuToggle = document.getElementById('menu-toggle');
-    const menuToggle_close = document.getElementById('menu-toggle-close');
+    // Control del menú móvil
+    const menuToggle = document.getElementById('menuToggle');
+    const menuToggleClose = document.getElementById('menuClose');
     const menu = document.getElementById('menu');
-    const menuIcon = document.getElementById('menu-icon');
 
     menuToggle.addEventListener('click', function() {
         menu.classList.remove('hidden');
-
+        menuToggle.classList.add('hidden');
+        menuToggleClose.classList.remove('hidden');
+        applyScrollStyles(); // Actualizar estilos del header
     });
-    menuToggle_close.addEventListener('click', function() {
+
+    menuToggleClose.addEventListener('click', function() {
         menu.classList.add('hidden');
-
+        menuToggle.classList.remove('hidden');
+        menuToggleClose.classList.add('hidden');
+        applyScrollStyles(); // Actualizar estilos del header
     });
+
+    // Inicialización
+    document.addEventListener('DOMContentLoaded', function() {
+        applyScrollStyles();
+        // Asegurarse de que el botón de cerrar esté oculto al cargar
+        menuToggleClose.classList.add('hidden');
+    });
+
+    window.addEventListener('scroll', applyScrollStyles);
 </script>
