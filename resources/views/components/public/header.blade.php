@@ -39,9 +39,9 @@
 
 
         <div class="w-11/12 max-w-[91.666667%] md:max-w-7xl mx-auto  flex justify-between items-center py-4">
-            <a href="/" class="text-2xl font-bold">
+            <a href="/" class="text-2xl font-bold w-auto">
                 <img src="{{ asset('images/img/logo/DarTelecom.png') }}" alt="Dar Telecom"
-                    class="h-14 w-max object-contain" />
+                    class="h-14 w-auto object-contain" />
             </a>
 
             <div class="hidden lg:flex justify-center items-center gap-10 font-semibold text-text18 xl:text-text22">
