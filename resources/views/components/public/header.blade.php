@@ -161,7 +161,7 @@
 
             </ul>
 
-            <x-custom.button-cotizar :general="$general" style="bg-white text-[#0E1D42]" />
+            <x-custom.button-cotizar :general="$general" style="bg-colorBackgroundRed " />
         </nav>
 
 
