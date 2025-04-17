@@ -440,7 +440,7 @@
                 </div>
                 <div class="  relative z-10 lg:hidden ">
 
-                    <img src="https://i.ibb.co/98Nm5Gs/ed2c30eb3b8e0f2d46d9b49e67419104.png" alt=""
+                    <img src="{{ asset($home->imageNewsletter) }}" alt=""
                         class="  w-[343] h-[370px] md:w-[450] md:h-auto  object-cover justify-self-start "
                         loading="lazy" />
 
