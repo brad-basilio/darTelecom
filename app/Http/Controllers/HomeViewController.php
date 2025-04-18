@@ -111,11 +111,11 @@ class HomeViewController extends Controller
                 'subtitleHero' => $request->subtitleHero,
                 'titleServicios' => $request->titleServicios,
                 'subtitleServicios' => $request->subtitleServicios,
-                'titleProductos' => $request->titleServicios,
-                'subtitleProductos' => $request->subtitleServicios,
-                'titleBlogs' => $request->titleServicios,
-                'subtitleBlogs' => $request->subtitleServicios,
-                'titleNewsletter' => $request->titleServicios,
+                'titleProductos' => $request->titleProductos,
+                'subtitleProductos' => $request->subtitleProductos,
+                'titleBlogs' => $request->titleBlogs,
+                'subtitleBlogs' => $request->subtitleBlogs,
+                'titleNewsletter' => $request->titleNewsletter,
                 'imageNewsletter' => $data['imageNewsletter'] ?? $homeview->imageNewsletter,
             ]);
             $homeview->save();
