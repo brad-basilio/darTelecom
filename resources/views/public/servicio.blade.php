@@ -158,21 +158,21 @@
 
             <div class="w-11/12 lg:max-w-7xl mx-auto px-4 flex flex-col lg:flex-row gap-8">
                 <!-- Sidebar -->
-                <aside class="lg:w-1/4">
+                <aside class="lg:w-1/4" hidden>
                     <nav class="">
                         <ul class="grid grid-cols-2 lg:grid-cols-1 gap-4 " data-aos="fade-up" data-aos-offset="150"
                             data-aos-duration="1000" data-aos-delay="200">
                             @if ($servicios)
-                                @foreach ($servicios as $index => $servicio)
-                                    <li data-id="{{ $servicio->id }}"
-                                        class="cursor-pointer group rounded-xl flex items-center gap-4 p-4 text-text20 font-semibold bg-colorBackgroundAzulClaro hover:bg-colorBackgroundRed text-colorAzulOscuro hover:text-white transition-all duration-300 {{ $index === 0 ? 'active' : '' }}">
-                                        <div class="group-hover:hidden h-7 w-7 bg-black"
-                                            style="mask-image: url('{{ asset($servicio->icono) }}'); mask-size: contain; mask-repeat: no-repeat;">
+                                @foreach ($servicios as $index => $servicioItem)
+                                    <li data-slug="{{ $servicioItem->slug }}"
+                                        class="cursor-pointer group rounded-xl flex items-center gap-4 p-4 text-text20 font-semibold bg-colorBackgroundAzulClaro hover:bg-colorBackgroundRed text-colorAzulOscuro hover:text-white transition-all duration-300 {{ isset($servicioSeleccionado) && $servicioSeleccionado == $servicioItem->slug ? 'active' : ($index === 0 && !isset($servicioSeleccionado) ? 'active' : '') }}">
+                                        <div class="group-hover:hidden h-7 w-7 bg-black {{ isset($servicioSeleccionado) && $servicioSeleccionado == $servicioItem->slug ? 'hidden' : '' }}"
+                                            style="mask-image: url('{{ asset($servicioItem->icono) }}'); mask-size: contain; mask-repeat: no-repeat;">
                                         </div>
-                                        <div class="hidden group-hover:inline-block h-7 w-7 bg-white"
-                                            style="mask-image: url('{{ asset($servicio->icono) }}'); mask-size: contain; mask-repeat: no-repeat;">
+                                        <div class="hidden group-hover:inline-block h-7 w-7 bg-white {{ isset($servicioSeleccionado) && $servicioSeleccionado == $servicioItem->slug ? '!inline-block' : '' }}"
+                                            style="mask-image: url('{{ asset($servicioItem->icono) }}'); mask-size: contain; mask-repeat: no-repeat;">
                                         </div>
-                                        <a href="#" class="servicio-link">{{ $servicio->title }}</a>
+                                        <a href="#" class="servicio-link">{{ $servicioItem->title }}</a>
                                     </li>
                                 @endforeach
 
@@ -182,8 +182,8 @@
                 </aside>
 
                 <!-- Main Content -->
-                <main class="lg:w-3/4 bg-white mb-16" id="main-content">
-                    <!-- El contenido del primer servicio se mostrará por defecto -->
+                <main class="lg:w-screen max-w-full bg-white mb-16" id="main-content">
+                    <!-- El contenido de l primer servicio se mostrará por defecto -->
 
                     @include('components.custom.component-servicio', $servicio)
 
@@ -208,8 +208,8 @@
             const mainContent = document.getElementById('main-content');
 
             // Función para cargar el contenido del servicio
-            function loadServicioContent(servicioId) {
-                fetch(`/servicios/${servicioId}`)
+            function loadServicioContent(servicioSlug) {
+                fetch(`/servicios/show/${servicioSlug}`)
                     .then(response => response.text())
                     .then(data => {
                         mainContent.innerHTML = data;
@@ -228,17 +228,25 @@
                     // Agregar la clase 'active' al elemento seleccionado
                     item.classList.add('active');
 
-                    // Obtener el ID del servicio y cargar su contenido
-                    const servicioId = item.getAttribute('data-id');
-                    loadServicioContent(servicioId);
+                    // Obtener el slug del servicio y cargar su contenido
+                    const servicioSlug = item.getAttribute('data-slug');
+                    loadServicioContent(servicioSlug);
                 });
             });
 
-            // Cargar el contenido del primer servicio por defecto
+            // Cargar el contenido del servicio seleccionado o el primer servicio por defecto
             if (sidebarItems.length > 0) {
-                const firstItem = sidebarItems[0];
-                const servicioId = firstItem.getAttribute('data-id');
-                loadServicioContent(servicioId);
+                // Buscar si hay un servicio activo (seleccionado desde la URL)
+                const activeItem = document.querySelector('aside nav ul li.active');
+                if (activeItem) {
+                    const servicioSlug = activeItem.getAttribute('data-slug');
+                    loadServicioContent(servicioSlug);
+                } else {
+                    // Si no hay activo, cargar el primer servicio
+                    const firstItem = sidebarItems[0];
+                    const servicioSlug = firstItem.getAttribute('data-slug');
+                    loadServicioContent(servicioSlug);
+                }
             }
         });
     </script>

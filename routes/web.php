@@ -81,9 +81,9 @@ use App\Models\Template;
 Route::get('/', [IndexController::class, 'index'])->name('index');
 Route::get('/nosotros', [IndexController::class, 'nosotros'])->name('nosotros');
 Route::get('/innovaciones', [IndexController::class, 'innovaciones'])->name('innovaciones');
-Route::get('/servicios', [IndexController::class, 'servicios'])->name('servicios');
+Route::get('/servicios/{slug?}', [IndexController::class, 'servicios'])->name('servicios');
 // routes/web.php
-Route::get('/servicios/{id}', [IndexController::class, 'showServicios'])->name('servicios.view');
+Route::get('/servicios/show/{slug}', [IndexController::class, 'showServicios'])->name('servicios.view');
 
 Route::get('/comentario', [IndexController::class, 'comentario'])->name('comentario');
 Route::post('/comentario/nuevo', [IndexController::class, 'hacerComentario'])->name('nuevocomentario');

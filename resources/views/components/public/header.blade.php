@@ -56,10 +56,35 @@
                             Nosotros</x-nav-link>
 
                     </li>
-                    <li>
-                        <x-nav-link href="{{ route('servicios') }}" :active="request()->routeIs('servicios')">
-                            Servicios</x-nav-link>
-
+                    <li class="relative group">
+                        <x-nav-link  :active="request()->routeIs('servicios')" class="flex items-center gap-1">
+                            Servicios
+                            <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                            </svg>
+                        </x-nav-link>
+                        <!-- Dropdown Menu -->
+                        <div class="absolute top-full left-0 mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                            <div class="py-2">
+                                @if($serviciosMenu && $serviciosMenu->count() > 0)
+                                    @foreach($serviciosMenu as $servicioItem)
+                                        <a href="{{ route('servicios', $servicioItem->slug) }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 hover:text-colorBackgroundRed transition-colors duration-200">
+                                            <div class="flex items-center gap-3">
+                                                @if($servicioItem->icono)
+                                                    <div class="w-5 h-5 bg-gray-600" style="mask-image: url('{{ asset($servicioItem->icono) }}'); mask-size: contain; mask-repeat: no-repeat;"></div>
+                                                @endif
+                                                <span class="font-medium">{{ $servicioItem->title }}</span>
+                                            </div>
+                                            @if($servicioItem->descripcion_breve)
+                                                <p class="text-xs text-gray-500 mt-1 ml-8">{{ Str::limit($servicioItem->descripcion_breve, 60) }}</p>
+                                            @endif
+                                        </a>
+                                    @endforeach
+                                @else
+                                    <div class="px-4 py-3 text-sm text-gray-500">No hay servicios disponibles</div>
+                                @endif
+                            </div>
+                        </div>
                     </li>
 
                     <li>
@@ -138,9 +163,30 @@
 
                 </li>
                 <li>
-                    <x-nav-link href="{{ route('servicios') }}" :active="request()->routeIs('servicios')">
-                        Servicios</x-nav-link>
-
+                    <div class="flex flex-col justify-center items-center space-y-2">
+                        <x-nav-link onclick="toggleMobileServiciosDropdown()"  :active="request()->routeIs('servicios')" class="flex items-center justify-center gap-2">
+                            Servicios
+                            <button onclick="toggleMobileServiciosDropdown()" class="text-white">
+                                <svg id="servicios-arrow" class="w-4 h-4 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                </svg>
+                            </button>
+                        </x-nav-link>
+                        <div id="mobile-servicios-dropdown" class="hidden bg-colorBackgroundAzulOscuro rounded-lg mt-2 ">
+                            @if($serviciosMenu && $serviciosMenu->count() > 0)
+                                @foreach($serviciosMenu as $servicioItem)
+                                    <a href="{{ route('servicios', $servicioItem->slug) }}" class="block  py-2 text-sm text-white hover:bg-colorBackgroundRed transition-colors duration-200 rounded">
+                                        <div class="flex items-center justify-center gap-2">
+                                            @if($servicioItem->icono)
+                                                <div class="w-4 h-4 bg-white" style="mask-image: url('{{ asset($servicioItem->icono) }}'); mask-size: contain; mask-repeat: no-repeat;"></div>
+                                            @endif
+                                            <span>{{ $servicioItem->title }}</span>
+                                        </div>
+                                    </a>
+                                @endforeach
+                            @endif
+                        </div>
+                    </div>
                 </li>
 
                 <li>
@@ -161,7 +207,7 @@
 
             </ul>
 
-            <x-custom.button-cotizar :general="$general" style="bg-colorBackgroundRed " />
+            <x-custom.button-cotizar :general="$general" style="bg-colorBackgroundRed " text="CONTACTANOS" />
         </nav>
 
 
@@ -231,4 +277,18 @@
     });
 
     window.addEventListener('scroll', applyScrollStyles);
+
+    // Función para toggle del dropdown de servicios en móvil
+    function toggleMobileServiciosDropdown() {
+        const dropdown = document.getElementById('mobile-servicios-dropdown');
+        const arrow = document.getElementById('servicios-arrow');
+        
+        if (dropdown.classList.contains('hidden')) {
+            dropdown.classList.remove('hidden');
+            arrow.classList.add('rotate-180');
+        } else {
+            dropdown.classList.add('hidden');
+            arrow.classList.remove('rotate-180');
+        }
+    }
 </script>

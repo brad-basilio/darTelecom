@@ -50,6 +50,12 @@ class AppServiceProvider extends ServiceProvider
             $view->with('general', $general);
         });
 
+        View::composer('components.public.header', function ($view) {
+            $general = General::first();
+            $serviciosMenu = \App\Models\Service::where('visible', 1)->get();
+            $view->with(['general' => $general, 'serviciosMenu' => $serviciosMenu]);
+        });
+
         View::composer('components.app.sidebar', function ($view) {
             // Obtener los datos del footer
 

@@ -130,7 +130,7 @@ class IndexController extends Controller
       'allEmpty' => $allEmpty, // Indicador para saber si todo está vacío
     ]);
   }
-  public function servicios(Request $request)
+  public function servicios(Request $request, $slug = null)
   {
     // Obtener todos los servicios visibles
     $servicios = Service::where('visible', 1)->get();
@@ -139,17 +139,22 @@ class IndexController extends Controller
     $servicio = null;
     $servicioPage = ServiceView::first();
     $general = General::first();
+    $servicioSeleccionado = null;
 
-    // Obtener el servicio específico si se proporciona un ID
-    if ($request->has('id')) {
-      $servicio = Service::where('visible', 1)->find($request->id); // Usar find en lugar de findOrFail
+    // Obtener el servicio específico si se proporciona un slug en la URL
+    if ($slug) {
+      $servicio = Service::where('visible', 1)->where('slug', $slug)->first();
       if (!$servicio) {
         // Si no se encuentra el servicio, redirigir con un mensaje de error
         return redirect()->route('servicios')->with('error', 'Servicio no encontrado.');
       }
+      $servicioSeleccionado = $servicio->slug;
     } else {
-      // Si no se proporciona un ID, mostrar el primer servicio visible
+      // Si no se proporciona un slug, mostrar el primer servicio visible
       $servicio = Service::where('visible', 1)->first();
+      if ($servicio) {
+        $servicioSeleccionado = $servicio->slug;
+      }
     }
 
     // Verificar si se encontró un servicio
@@ -171,19 +176,21 @@ class IndexController extends Controller
     }
 
     // Pasar los datos a la vista
-    return view('public.servicio', compact('servicios', 'servicio', 'servicioPage', 'general', 'album'));
+    return view('public.servicio', compact('servicios', 'servicio', 'servicioPage', 'general', 'album', 'servicioSeleccionado'));
   }
 
-  public function showServicios($id)
+  public function showServicios($slug)
   {
     $general = General::first();
-    $servicio = Service::findOrFail($id);
+    $servicio = Service::where('slug', $slug)->firstOrFail();
     // Extraer solo el nombre del producto desde la ruta en "album"
     $albumName = $servicio->slug;
 
     // Buscar el álbum en la base de datos
     $album = Album::where('name', $albumName)->withCount('images', 'children')->first();
-    $album->load('children', 'images');
+    if ($album) {
+      $album->load('children', 'images');
+    }
     return view('components.custom.component-servicio', ['servicio' => $servicio, 'general' => $general, 'album' => $album]);
   }
 
