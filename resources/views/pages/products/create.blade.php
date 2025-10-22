@@ -144,8 +144,9 @@
 
                                 <!-- Precio -->
                                 <div class="md:col-span-5 mt-2">
-                                    <label for="precio">Precio<span class="text-red-500">*</span></label>
-                                    <input type="number" id="precio" name="precio" required min="0"
+                                    <label for="precio">Precio (si es 0 o vacio no se mostrará)</label>
+                                    <input type="number" id="precio" name="precio" min="0"
+                                    
                                         step="0.01"
                                         class="mt-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                         placeholder="Precio normal">

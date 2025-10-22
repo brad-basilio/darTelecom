@@ -80,7 +80,7 @@
 
                 </ul>
 
-                <x-custom.button-cotizar :general="$general" />
+                <x-custom.button-cotizar :general="$general"  text="CONTACTANOS"/>
             </div>
             <div class="lg:hidden flex items-center justify-end">
                 <button id="menuToggle" class="text-white fill-white focus:outline-none">

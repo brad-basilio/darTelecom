@@ -152,13 +152,14 @@
                     <p class="text-colorParrafo text-text16 font-medium">{{ $producto?->category->name }}</p>
                     <h1 class="text-text40 font-semibold text-colorAzulOscuro ">{{ $producto?->producto }}</h1>
                     <p class="text-colorParrafo font-normal text-text16 mt-2">{{ $producto?->extract }}</p>
-
+                    @if($producto?->precio && $producto?->precio > 0)
                     @if ($producto?->en_oferta)
                         <p class="text-colorAzulOscuro text-text28 font-bold mt-4">S/ {{ $producto?->precio_oferta }}
                             <span class="text-colorParrafo text-text20  font-medium line-through">S/
                                 {{ $producto?->precio }}</span>
                         @else
                         <p class="text-colorAzulOscuro text-text28 font-bold mt-4">S/ {{ $producto?->precio }}</p>
+                    @endif
                     @endif
                     </p>
                     <div class="mt-4">
@@ -195,6 +196,7 @@
 
                     <div class="bg-colorBackgroundAzulClaro  rounded-xl mt-4 p-4 flex flex-col gap-4">
                         <div class="flex justify-between items-center">
+                          @if($producto?->precio && $producto?->precio > 0)
                             @if ($producto?->en_oferta)
                                 <div>
                                     <p class="text-text12 text-colorParrafo">Precio: <span
@@ -209,6 +211,7 @@
                                     </p>
 
                                 </div>
+                            @endif
                             @endif
 
                             @if ($producto?->envio_gratis)
