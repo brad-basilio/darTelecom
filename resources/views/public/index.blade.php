@@ -119,8 +119,8 @@
 
         .mySwiper .swiper-slide-css img {
             display: block;
-            width: 4rem !important;
-            height: 4rem;
+            width: 3rem !important;
+            height: 3rem;
             object-fit: cover;
         }
 
@@ -128,7 +128,7 @@
 
         .swiper-css {
             width: 100%;
-            min-height: 300px;
+            min-height: 180px;
             height: auto;
             margin-left: auto;
             margin-right: auto;
@@ -137,17 +137,17 @@
 
 
         .mySwiper2 {
-            min-height: 250px;
+            min-height: 120px;
             height: auto;
             width: 100%;
-            margin-bottom: 2rem;
+            margin-bottom: 0.5rem;
         }
 
         .mySwiper {
-            margin-top: 2rem;
-            height: 120px;
+            margin-top: 0.5rem;
+            height: 80px;
             box-sizing: border-box;
-            padding: 10px 0;
+            padding: 5px 0;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -165,10 +165,10 @@
 
         .mySwiper .swiper-slide-css img {
             display: block;
-            width: 4rem;
-            height: 4rem;
+            width: 3rem;
+            height: 3rem;
             object-fit: contain;
-            border: 3px solid #FFFFFF;
+            border: 2px solid #FFFFFF;
         }
 
 
@@ -181,28 +181,28 @@
         @media (min-width: 768px) {
             .mySwiper .swiper-slide-css {
 
-                width: 5rem !important;
-                height: 5rem !important;
+                width: 4rem !important;
+                height: 4rem !important;
 
             }
 
             .mySwiper .swiper-slide-css img {
                 display: block;
-                width: 5rem !important;
-                height: 5rem !important;
+                width: 4rem !important;
+                height: 4rem !important;
                 object-fit: cover;
             }
 
             .mySwiper2 {
-                min-height: 280px;
+                min-height: 150px;
                 height: auto;
-                margin-bottom: 2rem;
+                margin-bottom: 1rem;
 
             }
 
             .mySwiper {
 
-                height: 140px;
+                height: 90px;
 
             }
         }
@@ -211,15 +211,15 @@
 
 
             .mySwiper2 {
-                min-height: 300px;
+                min-height: 180px;
                 height: auto;
-                margin-bottom: 2rem;
+                margin-bottom: 1rem;
 
             }
 
             .mySwiper {
 
-                height: 120px;
+                height: 90px;
 
             }
         }
@@ -381,9 +381,9 @@
 
                 </div>
                 <!-- Contenido textual -->
-                <div class="w-11/12 lg:max-w-7xl mx-auto justify-start flex lg:justify-end lg:rounded-xl lg:order-1 py-16"
+                <div class="w-11/12 lg:max-w-7xl mx-auto justify-start flex lg:justify-end lg:rounded-xl lg:order-1 py-8 lg:py-12"
                     data-aos="fade-up" data-aos-offset="150" data-aos-duration="1000" data-aos-delay="200">
-                    <div class="w-full lg:w-7/12 lg:p-8 flex items-center justify-center flex-col">
+                    <div class="w-full lg:w-7/12 lg:p-4 flex items-center justify-center flex-col">
                         <!-- Slider main container -->
                         <div style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff"
                             class="swiper mySwiper2 swiper-css" data-aos="fade-left" data-aos-offset="150"
@@ -412,7 +412,7 @@
                                 @foreach ($testimonios as $testimonio)
                                     <div class="swiper-slide swiper-slide-css">
                                         <img src="{{ asset($testimonio?->ocupation) }}"
-                                            class="w-16 h-16 lg:w-20  lg:h-20   rounded-full border-2 border-white object-contain" />
+                                            class="w-12 h-12 lg:w-16  lg:h-16   rounded-full border-2 border-white object-contain" />
                                     </div>
                                 @endforeach
                             </div>
