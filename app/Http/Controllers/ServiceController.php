@@ -176,7 +176,7 @@ class ServiceController extends Controller
             'subtitle' => 'nullable|string|max:255',
             'descripcion_breve' => 'nullable|string',
             'descripcion_extensa' => 'nullable|string',
-            'icono' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+          'icono' => 'required|file|mimes:svg',
             'imagen_principal' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
