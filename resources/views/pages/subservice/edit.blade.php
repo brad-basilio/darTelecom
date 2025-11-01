@@ -368,7 +368,7 @@
                     'py-1', 'rounded-full', 'opacity-0', 'group-hover:opacity-100', 'transition-opacity');
                 deleteButton.innerHTML = '<i class="fa-solid fa-trash"></i>';
                 deleteButton.onclick = function() {
-                    deleteImage(`/subservicios/images/${image.id}`, image.id);
+                    deleteImage(`/admin/subservicios/images/${image.id}`, image.id);
                 };
 
                 imageWrapper.appendChild(img);
