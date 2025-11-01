@@ -36,13 +36,14 @@
 
    <div class="flex flex-col md:flex-row items-start md:justify-between md:items-center mb-4 md:mb-0" data-aos="fade-up"
        data-aos-offset="150" data-aos-duration="1000" data-aos-delay="200">
-       <div>
+       <div class="max-w-[90%]">
            <h2 class="text-colorRojo text-text32 font-extrabold">{{ $servicio->title }}</h2>
            <h3 class="text-text32 font-semibold mb-4">{{ $servicio->subtitle }}</h3>
        </div>
-       <x-custom.button-cotizar :general="$general" />
+       <x-custom.button-cotizar :general="$general" text="CONTACTANOS" />
    </div>
 
+   @if($album && $album->images && $album->images->count() > 0)
    <div class="mb-8" data-aos="fade-up" data-aos-offset="150" data-aos-duration="1000" data-aos-delay="200">
        <div x-data="{}" x-init="new Swiper('.mySwiper', {
            loop: true,
@@ -62,7 +63,7 @@
                    @foreach ($album->images as $image)
                        <div class="swiper-slide">
                            <div class="rounded-xl overflow-hidden">
-                               <img class="w-full h-[600px] rounded-lg cursor-pointer object-cover"
+                               <img class="!w-full aspect-video rounded-lg cursor-pointer object-cover"
                                    src="{{ asset($image->url_image) }}" alt="{{ $image->name_image }}">
                            </div>
                        </div>
@@ -76,6 +77,7 @@
            </div>
        </div>
    </div>
+   @endif
 
 
 
@@ -90,6 +92,6 @@
    <x-custom.servicio-beneficio :text="$servicio->beneficios" :icono="$servicio->icono" />
 
    <!-- Call to Action -->
-   <div class="text-start mt-8">
+   <div class="text-start mt-8" hidden>
        <x-custom.button-cotizar :general="$general" text="Cotizar Servicio" />
    </div>

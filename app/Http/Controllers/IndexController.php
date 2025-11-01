@@ -47,6 +47,7 @@ use App\Models\PolyticsCondition;
 use App\Models\ProductosView;
 use App\Models\Service;
 use App\Models\ServiceView;
+use App\Models\SubService;
 use App\Models\TermsAndCondition;
 use Attribute;
 use Illuminate\Http\Request;
@@ -132,66 +133,95 @@ class IndexController extends Controller
   }
   public function servicios(Request $request, $slug = null)
   {
-    // Obtener todos los servicios visibles
-    $servicios = Service::where('visible', 1)->get();
-
-    // Inicializar variables
-    $servicio = null;
     $servicioPage = ServiceView::first();
     $general = General::first();
-    $servicioSeleccionado = null;
-
-    // Obtener el servicio específico si se proporciona un slug en la URL
+    
+    // Determinar el servicio padre
+    $servicioParaHeader = null;
+    $subservicioSeleccionado = null;
+    
     if ($slug) {
-      $servicio = Service::where('visible', 1)->where('slug', $slug)->first();
-      if (!$servicio) {
-        // Si no se encuentra el servicio, redirigir con un mensaje de error
-        return redirect()->route('servicios')->with('error', 'Servicio no encontrado.');
-      }
-      $servicioSeleccionado = $servicio->slug;
-    } else {
-      // Si no se proporciona un slug, mostrar el primer servicio visible
-      $servicio = Service::where('visible', 1)->first();
-      if ($servicio) {
-        $servicioSeleccionado = $servicio->slug;
+      // Si viene un slug, puede ser de un servicio o subservicio
+      $servicioParaHeader = Service::where('visible', 1)->where('slug', $slug)->first();
+      
+      if (!$servicioParaHeader) {
+        // Si no es un servicio, buscar si es un subservicio
+        $subservicioTemp = SubService::where('visible', 1)->where('slug', $slug)->with('service')->first();
+        if ($subservicioTemp) {
+          $servicioParaHeader = $subservicioTemp->service;
+          $subservicioSeleccionado = $subservicioTemp->slug;
+        }
       }
     }
-
-    // Verificar si se encontró un servicio
-    if (!$servicio) {
-      // Si no hay servicios disponibles, redirigir o mostrar un mensaje de error
-      return redirect()->route('servicios')->with('error', 'No hay servicios disponibles.');
+    
+    // Si no se encontró servicio, usar el primero disponible
+    if (!$servicioParaHeader) {
+      $servicioParaHeader = Service::where('visible', 1)->first();
     }
-
-    // Obtener el álbum relacionado al servicio
-    $albumName = $servicio->slug;
-    $album = Album::where('name', $albumName)->withCount(['images', 'children'])->first();
-
-    // Verificar si se encontró un álbum
-    if ($album) {
-      $album->load('children', 'images'); // Cargar relaciones solo si el álbum existe
-    } else {
-      // Si no se encuentra el álbum, inicializar como null
+    
+    if (!$servicioParaHeader) {
+      return redirect()->route('index')->with('error', 'No hay servicios disponibles.');
+    }
+    
+    // Obtener los subservicios del servicio específico
+    $subservicios = SubService::where('visible', 1)
+                              ->where('service_id', $servicioParaHeader->id)
+                              ->get();
+    
+    // Obtener el subservicio a mostrar
+    $subservicio = null;
+    if ($subservicioSeleccionado) {
+      $subservicio = $subservicios->where('slug', $subservicioSeleccionado)->first();
+    }
+    
+    if (!$subservicio) {
+      $subservicio = $subservicios->first();
+      if ($subservicio) {
+        $subservicioSeleccionado = $subservicio->slug;
+      }
+    }
+    
+    // Si no hay subservicios, pasar datos vacíos para mostrar solo el header del servicio
+    if (!$subservicio) {
+      $servicios = collect(); // Colección vacía
+      $servicio = null;
+      $servicioSeleccionado = null;
       $album = null;
+      
+      return view('public.servicio', compact('servicios', 'servicio', 'servicioPage', 'general', 'album', 'servicioSeleccionado', 'servicioParaHeader'));
     }
-
-    // Pasar los datos a la vista
-    return view('public.servicio', compact('servicios', 'servicio', 'servicioPage', 'general', 'album', 'servicioSeleccionado'));
+    
+    // Obtener el álbum relacionado al subservicio
+    $albumName = $subservicio->slug;
+    $album = Album::where('name', $albumName)->withCount(['images', 'children'])->first();
+    
+    if ($album) {
+      $album->load('children', 'images');
+    }
+    
+    // Asignar variables con nombres compatibles con la vista
+    $servicios = $subservicios;
+    $servicio = $subservicio;
+    $servicioSeleccionado = $subservicioSeleccionado;
+    
+    return view('public.servicio', compact('servicios', 'servicio', 'servicioPage', 'general', 'album', 'servicioSeleccionado', 'servicioParaHeader'));
   }
 
   public function showServicios($slug)
   {
     $general = General::first();
-    $servicio = Service::where('slug', $slug)->firstOrFail();
-    // Extraer solo el nombre del producto desde la ruta en "album"
-    $albumName = $servicio->slug;
+    $subservicio = SubService::where('slug', $slug)->firstOrFail();
+    // Extraer solo el nombre del subservicio desde la ruta en "album"
+    $albumName = $subservicio->slug;
 
     // Buscar el álbum en la base de datos
     $album = Album::where('name', $albumName)->withCount('images', 'children')->first();
     if ($album) {
       $album->load('children', 'images');
     }
-    return view('components.custom.component-servicio', ['servicio' => $servicio, 'general' => $general, 'album' => $album]);
+    
+    // Pasamos el subservicio como servicio para mantener compatibilidad con el componente
+    return view('components.custom.component-servicio', ['servicio' => $subservicio, 'general' => $general, 'album' => $album]);
   }
 
   public function coleccion($filtro)

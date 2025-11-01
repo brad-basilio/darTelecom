@@ -185,6 +185,18 @@ Route::middleware(['auth:sanctum', 'verified', 'can:Admin'])->group(function () 
         Route::post('/servicios/{album}/upload', [ServiceController::class, 'uploadImages'])->name('servicio.uploadImages'); // Subir imágenes
         Route::delete('/servicios/images/{image}', [ServiceController::class, 'destroyImage'])->name('servicio.images.destroy');
 
+        //Subservicios
+        Route::get('/servicios/{service}/subservicios', [App\Http\Controllers\SubServiceController::class, 'index'])->name('subservicios.index');
+        Route::get('/servicios/{service}/subservicios/create', [App\Http\Controllers\SubServiceController::class, 'create'])->name('subservicios.create');
+        Route::post('/servicios/{service}/subservicios', [App\Http\Controllers\SubServiceController::class, 'store'])->name('subservicios.store');
+        Route::get('/servicios/{service}/subservicios/{subservicio}/edit', [App\Http\Controllers\SubServiceController::class, 'edit'])->name('subservicios.edit');
+        Route::put('/servicios/{service}/subservicios/{subservicio}', [App\Http\Controllers\SubServiceController::class, 'update'])->name('subservicios.update');
+        Route::delete('/servicios/{service}/subservicios/{subservicio}', [App\Http\Controllers\SubServiceController::class, 'destroy'])->name('subservicios.destroy');
+        Route::post('/subservicios/updateVisible', [App\Http\Controllers\SubServiceController::class, 'updateVisible'])->name('subservicio.updateVisible');
+        Route::post('/servicios/{service}/subservicios/borrar', [App\Http\Controllers\SubServiceController::class, 'destroyAjax'])->name('subservicio.borrar');
+        Route::post('/subservicios/{album}/upload', [App\Http\Controllers\SubServiceController::class, 'uploadImages'])->name('subservicio.uploadImages');
+        Route::delete('/subservicios/images/{image}', [App\Http\Controllers\SubServiceController::class, 'destroyImage'])->name('subservicio.images.destroy');
+
 
         //Testimonies
         Route::resource('/testimonios', TestimonyController::class);

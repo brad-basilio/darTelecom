@@ -128,7 +128,8 @@
 
         .swiper-css {
             width: 100%;
-            height: 300px;
+            min-height: 300px;
+            height: auto;
             margin-left: auto;
             margin-right: auto;
         }
@@ -136,13 +137,15 @@
 
 
         .mySwiper2 {
-            height: 75%;
+            min-height: 250px;
+            height: auto;
             width: 100%;
+            margin-bottom: 2rem;
         }
 
         .mySwiper {
             margin-top: 2rem;
-            height: 25%;
+            height: 120px;
             box-sizing: border-box;
             padding: 10px 0;
             display: flex;
@@ -191,13 +194,15 @@
             }
 
             .mySwiper2 {
-                height: 70%;
+                min-height: 280px;
+                height: auto;
+                margin-bottom: 2rem;
 
             }
 
             .mySwiper {
 
-                height: 30%;
+                height: 140px;
 
             }
         }
@@ -206,13 +211,15 @@
 
 
             .mySwiper2 {
-                height: 75%;
+                min-height: 300px;
+                height: auto;
+                margin-bottom: 2rem;
 
             }
 
             .mySwiper {
 
-                height: 25%;
+                height: 120px;
 
             }
         }
@@ -320,20 +327,20 @@
 
                     @if ($productos)
                         @foreach ($productos as $producto)
-                            <div class="bg-colorBackgroundAzulClaro h-max p-4 shadow-md text-start group cursor-pointer rounded-xl"
+                            <div class="bg-colorBackgroundAzulClaro h-full p-4 shadow-md text-start group cursor-pointer rounded-xl"
                                 data-aos="zoom-in" data-aos-offset="150" data-aos-duration="1000" data-aos-delay="200">
                                 <a href="{{ route('producto', $producto->slug) }}">
                                     <div class="mb-4 w-full h-[92px] md:h-[212px] bg-white rounded-xl">
                                         <img src="{{ asset($producto->imagen) }}" alt="{{ $producto->producto }}"
                                             class=" w-full h-full object-contain">
                                     </div>
-                                    <h3 class="text-text14 md:text-text28 font-semibold mb-2 text-colorAzulOscuro">
+                                    <h3 class="text-text14 md:text-text22 font-semibold mb-2 text-colorAzulOscuro">
                                         {{ $producto->producto }}
                                     </h3>
                                     <p class="text-colorParrafo mb-4 text-text10 md:text-text16 line-clamp-2">
                                         {{ $producto->extract }}</p>
                                     <a href="{{ route('producto', $producto->slug) }}"
-                                        class="text-text10  md:text-text16 group-hover:w-full duration-300 ease-in-out group-hover:text-center group-hover:bg-colorBackgroundAzul bg-colorBackgroundRed  rounded-full text-white font-semibold px-4 py-2 inline-block">Ver
+                                        class="text-text10  md:text-text16 group-hover:w-full duration-500 transition-all group-hover:text-center group-hover:bg-colorBackgroundAzul bg-colorBackgroundRed  rounded-full text-white font-semibold px-4 py-2 inline-block">Ver
                                         más</a>
                                 </a>
                             </div>

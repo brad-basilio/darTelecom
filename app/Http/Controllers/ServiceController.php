@@ -55,8 +55,8 @@ class ServiceController extends Controller
             'subtitle' => 'nullable|string|max:255',
             'icono' => 'required|file|mimes:svg',
             'descripcion_breve' => 'required|string',
-            'beneficios' => 'required|string',
             'descripcion_extensa' => 'nullable|string',
+            'imagen_principal' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
@@ -97,7 +97,6 @@ class ServiceController extends Controller
             $service->title = $request->title;
             $service->slug = $slug;
             $service->subtitle = $request->subtitle;
-            $service->beneficios = $request->beneficios;
             $service->descripcion_breve = $request->descripcion_breve;
             $service->descripcion_extensa = $request->descripcion_extensa;
 
@@ -114,6 +113,20 @@ class ServiceController extends Controller
 
                 $file->move(public_path($ruta), $nombreImagen);
                 $service->icono = $ruta . $nombreImagen;
+            }
+
+            // Guardar la imagen principal
+            if ($request->hasFile("imagen_principal")) {
+                $file = $request->file('imagen_principal');
+                $nombreImagen = Str::random(10) . '_' . $file->getClientOriginalName();
+                $ruta = 'storage/images/servicios/principales/';
+
+                if (!file_exists(public_path($ruta))) {
+                    mkdir(public_path($ruta), 0777, true);
+                }
+
+                $file->move(public_path($ruta), $nombreImagen);
+                $service->imagen_principal = $ruta . $nombreImagen;
             }
 
             $service->save();
@@ -158,11 +171,18 @@ class ServiceController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'subtitle' => 'nullable|string|max:255',
+            'descripcion_breve' => 'nullable|string',
+            'descripcion_extensa' => 'nullable|string',
+            'icono' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'imagen_principal' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
 
         $service = Service::findOrfail($id);
         $service->title = $request->title;
         $service->subtitle = $request->subtitle;
-        $service->beneficios = $request->beneficios;
         $service->descripcion_breve = $request->descripcion_breve;
         $service->descripcion_extensa = $request->descripcion_extensa;
 
@@ -186,7 +206,28 @@ class ServiceController extends Controller
             $service->icono = $ruta . $nombreImagen;
         }
 
+        // Si el usuario sube una nueva imagen principal
+        if ($request->hasFile("imagen_principal")) {
+            // Elimina el archivo anterior si existe
+            if ($service->imagen_principal && File::exists(public_path($service->imagen_principal))) {
+                File::delete(public_path($service->imagen_principal));
+            }
 
+            // Obtiene el nuevo archivo
+            $file = $request->file('imagen_principal');
+            $nombreImagen = Str::random(10) . '_' . $file->getClientOriginalName();
+            $ruta = 'storage/images/servicios/principales/';
+
+            if (!file_exists(public_path($ruta))) {
+                mkdir(public_path($ruta), 0777, true);
+            }
+
+            // Mueve el archivo a la carpeta deseada
+            $file->move(public_path($ruta), $nombreImagen);
+
+            // Actualiza el campo imagen_principal con la nueva ruta
+            $service->imagen_principal = $ruta . $nombreImagen;
+        }
 
         $service->update();
 

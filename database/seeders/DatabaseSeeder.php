@@ -42,7 +42,8 @@ class DatabaseSeeder extends Seeder
             ProductosViewSeeder::class,
             InnovacionViewSeeder::class,
             NosotrosViewSeeder::class,
-            ContactoViewSeeder::class
+            ContactoViewSeeder::class,
+            ServicesAndSubServicesSeeder::class
 
             //ServiceSeeder::class,
         ]);

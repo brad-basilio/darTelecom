@@ -58,21 +58,6 @@
                                     </div>
                                 </div>
 
-                                <div class="md:col-span-5">
-                                    <label for="beneficios">Beneficios del servicio</label>
-                                    <span class="text-colorRojo ml-4 text-xs">( Menciona los beneficios separados por
-                                        punto y coma ";")</span>
-                                    <div class="relative mb-2 mt-2">
-                                        <div
-                                            class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                            <i class="fa-regular fa-pen-to-square"></i>
-                                        </div>
-                                        <textarea type="text" rows="2" id="beneficios" name="beneficios" value=""
-                                            class="mt-1 min-h-24 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder="Ej. Implementación rápida, Soporte técnico prioritario ">{{ $servicios->beneficios }}</textarea>
-                                    </div>
-
-                                </div>
 
 
 
@@ -106,7 +91,7 @@
                                     </div>
                                 </div>
                                 <!-- Agregar el campo de la galería de imágenes -->
-                                <div class="md:col-span-5 mt-4">
+                                <div class="md:col-span-5 mt-4" hidden>
                                     <div class="w-full">
                                         <label for="fileAlbum"
                                             class="cursor-pointer text-center p-4 md:p-8 block border-2 border-dashed rounded-lg">
@@ -120,7 +105,7 @@
                                             class="hidden">
                                     </div>
                                 </div>
-                                <div class="md:col-span-5">
+                                <div class="md:col-span-5" hidden>
                                     <label for="album">Galería de imágenes</label>
                                     <div class="border p-4 rounded shadow mt-1" id="gallery-container">
                                         <!-- Imágenes -->
@@ -142,6 +127,22 @@
                                         @else
                                             <p class="text-gray-500">No hay imágenes en este álbum.</p>
                                         @endif
+                                    </div>
+                                </div>
+                                
+                                <div class="md:col-span-5">
+                                    <label for="imagen_principal">Imagen Principal del Servicio</label>
+                                    <span class="text-colorRojo ml-4 text-xs">( Imagen principal que representa el servicio )</span>
+                                    <div class="relative mb-2 mt-2">
+                                        @if($servicios->imagen_principal)
+                                            <div class="mb-3">
+                                                <img src="{{ asset($servicios->imagen_principal) }}" alt="Imagen Principal" class="w-full aspect-video object-cover rounded-lg">
+                                                <p class="text-sm text-gray-600 mt-1">Imagen actual</p>
+                                            </div>
+                                        @endif
+                                        <input name="imagen_principal"
+                                            class="p-2.5 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                                            id="imagen_principal" type="file" accept="image/*">
                                     </div>
                                 </div>
                             </div>

@@ -51,7 +51,8 @@
                                 <th>Titulo</th>
                                 <th class="w-80">Descripcion Breve</th>
                                 <th>Icono</th>
-                                <th class="w-56">Beneficios</th>
+                                <th class="w-56">Imagen Principal</th>
+                                <th>Subservicios</th>
                                 <th>Visible</th>
                                 <th>Acciones</th>
                             </tr>
@@ -67,7 +68,24 @@
                                             style="mask-image: url('{{ asset($item->icono) }}'); mask-size: contain; mask-repeat: no-repeat;"">
                                         </div>
                                     </td>
-                                    <td class="w-56 line-clamp-2">{{ $item->beneficios }}</td>
+                                    <td class="w-56">
+                                        @if($item->imagen_principal)
+                                            <img src="{{ asset($item->imagen_principal) }}" alt="{{ $item->title }}" 
+                                                 class="w-20 h-12 object-cover rounded">
+                                        @else
+                                            <span class="text-gray-500 text-sm">Sin imagen</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                            {{ $item->subServices->count() }} subservicios
+                                        </span>
+                                        <br>
+                                        <a href="{{ route('subservicios.index', $item->id) }}" 
+                                           class="text-blue-600 hover:text-blue-800 text-xs mt-1 inline-block">
+                                            Gestionar
+                                        </a>
+                                    </td>
                                     <td>
                                         <input type="checkbox" id="hs-basic-usage"
                                             class="check_v btn_swithc relative w-[3.25rem] h-7 p-px bg-gray-100 border-transparent text-transparent 
@@ -105,7 +123,8 @@
                                 <th>Titulo</th>
                                 <th>Descripcion Breve</th>
                                 <th>Icono</th>
-                                <th>Beneficios</th>
+                                <th>Imagen Principal</th>
+                                <th>Subservicios</th>
                                 <th>Visible</th>
                                 <th>Acciones</th>
                             </tr>
@@ -191,6 +210,41 @@
 
     </div>
 
+    <!-- Estilos para SweetAlert2 -->
+    <style>
+        .swal2-confirm {
+            background-color: #dc2626 !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 0.5rem !important;
+            padding: 0.5rem 1rem !important;
+            font-weight: 500 !important;
+            margin-right: 0.5rem !important;
+        }
+        
+        .swal2-confirm:hover {
+            background-color: #b91c1c !important;
+        }
+        
+        .swal2-cancel {
+            background-color: #6b7280 !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 0.5rem !important;
+            padding: 0.5rem 1rem !important;
+            font-weight: 500 !important;
+            margin-left: 0.5rem !important;
+        }
+        
+        .swal2-cancel:hover {
+            background-color: #4b5563 !important;
+        }
+        
+        .swal2-actions {
+            gap: 0.5rem !important;
+        }
+    </style>
+
     <script>
         $('document').ready(function() {
 
@@ -207,10 +261,9 @@
                     text: "Eliminaras el Servicio y sus recursos asociados, ¿Desea continuar?",
                     icon: "warning",
                     showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "Si, borrar!",
-                    cancelButtonText: "Cancelar"
+                    confirmButtonText: "Sí, eliminar",
+                    cancelButtonText: "Cancelar",
+                    reverseButtons: true
                 }).then((result) => {
                     if (result.isConfirmed) {
 

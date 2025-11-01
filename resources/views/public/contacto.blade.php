@@ -129,7 +129,7 @@
 
         </section>
         <!--Seccion FAQs-->
-        <section class="w-11/12 lg:max-w-7xl mx-auto flex flex-col lg:flex-row mt-12" data-aos="fade-up"
+        <section class="w-11/12 lg:max-w-7xl mx-auto flex flex-col lg:flex-row gap-12 mt-12" data-aos="fade-up"
             data-aos-offset="150" data-aos-duration="1000" data-aos-delay="200">
             <div class="w-full lg:w-1/2">
                 <h2 class="text-text32 font-bold text-colorAzulOscuro">{{ $contactoview->titleFaqs }}</h2>

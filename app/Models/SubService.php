@@ -5,26 +5,36 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Service extends Model
+class SubService extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        'service_id',
+        'album_id',
         'title', 
         'slug', 
         'subtitle', 
         'icono', 
         'descripcion_breve', 
+        'beneficios', 
         'descripcion_extensa', 
-        'imagen_principal',
         'visible'
     ];
 
     /**
-     * Relación con los subservicios
+     * Relación con el servicio padre
      */
-    public function subServices()
+    public function service()
     {
-        return $this->hasMany(SubService::class);
+        return $this->belongsTo(Service::class);
+    }
+
+    /**
+     * Relación con el álbum de imágenes
+     */
+    public function album()
+    {
+        return $this->belongsTo(Album::class);
     }
 }
