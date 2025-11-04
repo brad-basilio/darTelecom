@@ -128,7 +128,7 @@
 
         .swiper-css {
             width: 100%;
-            min-height: 180px;
+            min-height: min-content;
             height: auto;
             margin-left: auto;
             margin-right: auto;
@@ -381,7 +381,7 @@
 
                 </div>
                 <!-- Contenido textual -->
-                <div class="w-11/12 lg:max-w-7xl mx-auto justify-start flex lg:justify-end lg:rounded-xl lg:order-1 py-8 lg:py-12"
+                <div class="w-11/12 lg:max-w-7xl mx-auto justify-start flex lg:justify-end lg:rounded-xl lg:order-1 py-8 lg:py-20"
                     data-aos="fade-up" data-aos-offset="150" data-aos-duration="1000" data-aos-delay="200">
                     <div class="w-full lg:w-7/12 lg:p-4 flex items-center justify-center flex-col">
                         <!-- Slider main container -->
@@ -392,10 +392,10 @@
                                 @foreach ($testimonios as $testimonio)
                                     <div class="swiper-slide cursor-pointer swiper-slide-css">
 
-                                        <h2 class="text-text32 lg:text-text36 font-bold text-textWhite mb-4 text-center">
+                                        <h2 class="text-text22 lg:text-text28 font-bold text-textWhite mb-4 text-center">
                                             <x-custom.texto-titulo :text="$testimonio?->testimonie" style="text-colorRojo" />
                                         </h2>
-                                        <p class="text-white text-text24"><span
+                                        <p class="text-white text-text18 lg:text-text20"><span
                                                 class="text-colorRojo">{{ $testimonio?->name }},
                                             </span>
                                             {{ $testimonio?->departamento }} - {{ $testimonio?->pais }}</p>
@@ -406,8 +406,8 @@
                             </div>
 
                         </div>
-                        <div thumbsSlider="" class="swiper mySwiper swiper-css">
-                            <div class="swiper-wrapper"
+                        <div thumbsSlider="" class="swiper mySwiper swiper-css !h-10 lg:h-auto">
+                            <div class="swiper-wrapper  "
                                 style="display: flex; justify-content: center;  align-items:center;">
                                 @foreach ($testimonios as $testimonio)
                                     <div class="swiper-slide swiper-slide-css">
