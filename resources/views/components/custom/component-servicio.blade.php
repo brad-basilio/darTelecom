@@ -40,7 +40,7 @@
            <h2 class="text-colorRojo text-text32 font-extrabold">{{ $servicio->title }}</h2>
            <h3 class="text-text32 font-semibold mb-4">{{ $servicio->subtitle }}</h3>
        </div>
-       <x-custom.button-cotizar :general="$general" text="CONTACTANOS" />
+       <x-custom.button-cotizar :general="$general" text="CONTÁCTANOS" />
    </div>
 
    @if($album && $album->images && $album->images->count() > 0)

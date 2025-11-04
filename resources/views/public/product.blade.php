@@ -16,15 +16,18 @@
         .specs-table th {
             background-color: white;
             text-align: left;
-            padding: 20px 20px;
+            padding: 15px 10px;
             border: none;
             width: 40%;
+            font-size: 0.9em;
+            font-weight: 600;
         }
 
         .specs-table td {
-            padding: 20px 20px;
+            padding: 15px 10px;
             border: none;
             background-color: white;
+            font-size: 0.9em;
         }
 
         .specs-table tr:nth-child(even) td {
@@ -33,6 +36,39 @@
 
         .specs-table tr:nth-child(even) th {
             background-color: #f8fafc;
+        }
+
+        /* Responsive para móviles */
+        @media (max-width: 768px) {
+            .specs-table {
+                font-size: 1em;
+            }
+            
+            .specs-table th {
+                padding: 12px 8px;
+                font-size: 1em;
+                width: 35%;
+                line-height: 1.3;
+            }
+
+            .specs-table td {
+                padding: 12px 8px;
+                font-size: 1em;
+                line-height: 1.3;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .specs-table th {
+                padding: 10px 6px;
+                font-size: 0.75em;
+                width: 30%;
+            }
+
+            .specs-table td {
+                padding: 10px 6px;
+                font-size: 0.75em;
+            }
         }
 
         /* Estilos para la descripción */
@@ -129,19 +165,19 @@
         <div class="w-11/12 lg:max-w-7xl mx-auto pt-32">
             <div class="bg-white rounded-lg flex flex-col md:flex-row gap-12">
                 <div class="w-full md:w-1/2">
-                    <div class="bg-colorBackgroundAzulClaro p-6 rounded-xl">
-                        <img id="mainImage" class="w-full h-[550px] object-cover rounded-xl "
+                    <div class="bg-colorBackgroundAzulClaro p-6 overflow-hidden rounded-xl">
+                        <img id="mainImage" class="w-full overflow-hidden  aspect-square object-contain !rounded-xl "
                             src="{{ asset($producto?->imagen) }}" alt="{{ $producto?->producto }}">
                     </div>
-                    <div class="grid grid-cols-5 mt-4 gap-4">
+                    <div class="grid grid-cols-4 lg:grid-cols-5 mt-4 gap-4">
                         <div class="bg-colorBackgroundAzulClaro p-2 rounded-xl">
-                            <img class="w-full h-28  object-cover rounded-lg cursor-pointer aspect-square"
+                            <img class="w-full    object-contain rounded-lg cursor-pointer aspect-square"
                                 src="{{ asset($producto?->imagen) }}" alt="{{ $producto?->producto }}"
                                 onclick="changeImage(this)">
                         </div>
                         @foreach ($album->images as $image)
                             <div class="bg-colorBackgroundAzulClaro p-2 rounded-xl aspect-square">
-                                <img class="w-full h-28 object-cover rounded-lg cursor-pointer aspect-square"
+                                <img class="w-full  object-contain rounded-lg cursor-pointer aspect-square"
                                     src="{{ asset($image->url_image) }}" alt="{{ $image->name_image }}"
                                     onclick="changeImage(this)">
                             </div>
@@ -295,11 +331,12 @@
                 </div>
             </div>
             <div id="descriptionContainer"
-                class="flex gap-8 justify-between max-h-[600px] overflow-hidden mb-4 relative border-b pb-8">
+                class="flex flex-col lg:flex-row gap-4 lg:gap-8 justify-between max-h-[600px] overflow-hidden mb-4 relative border-b pb-8">
                 <!-- SECCIÓN DE ESPECIFICACIONES TÉCNICAS -->
                 <div class="mt-6 w-full lg:w-5/12">
-                    <h2 class="text-xl font-bold text-colorAzulOscuro mb-4 pb-2 border-b">Características del producto</h2>
-                    <table class="specs-table">
+                    <h2 class="text-lg lg:text-xl font-bold text-colorAzulOscuro mb-4 pb-2 border-b">Características del producto</h2>
+                    <div class="overflow-x-auto">
+                        <table class="specs-table">
                         @php
                             // Procesar las especificaciones desde la base de datos
                             $specs = [];
@@ -322,11 +359,12 @@
                             @endforeach
                         @endif
                     </table>
+                    </div>
                 </div>
 
                 <!-- SECCIÓN DE DESCRIPCIÓN CON LECTURA EXPANDIBLE -->
                 <div class="product-description mt-6 w-full lg:w-6/12">
-                    <h2 class="text-xl font-bold text-colorAzulOscuro mb-4 pb-2 border-b">Descripción</h2>
+                    <h2 class="text-lg lg:text-xl font-bold text-colorAzulOscuro mb-4 pb-2 border-b">Descripción</h2>
                     <div class="description-content !text-colorParrafo" style="color: #334155 !important">
                         {!! $producto?->description ?? '<p>No hay descripción disponible</p>' !!}
                     </div>

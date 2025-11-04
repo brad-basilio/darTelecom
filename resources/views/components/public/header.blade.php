@@ -105,7 +105,7 @@
 
                 </ul>
 
-                <x-custom.button-cotizar :general="$general"  text="CONTACTANOS"/>
+                <x-custom.button-cotizar :general="$general"  text="CONTÁCTANOS"/>
             </div>
             <div class="lg:hidden flex items-center justify-end">
                 <button id="menuToggle" class="text-white fill-white focus:outline-none">
@@ -207,7 +207,7 @@
 
             </ul>
 
-            <x-custom.button-cotizar :general="$general" style="bg-colorBackgroundRed " text="CONTACTANOS" />
+            <x-custom.button-cotizar :general="$general" style="bg-colorBackgroundRed " text="CONTÁCTANOS" />
         </nav>
 
 

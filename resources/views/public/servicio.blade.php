@@ -138,11 +138,11 @@
 
         <section class="relative w-full"> <!-- Subheader -->
             <div class="absolute left-0  top-0 transform rotate-180 ">
-                <img src="{{ asset('images/img/background/bg-testimonio.png') }}" alt="" class="w-20 md:w-36 lg:w-48">
+                <img src="{{ asset('images/img/background/bg-testimonio.png') }}" alt="" class="w-20 md:w-36 lg:w-40">
             </div>
             <div class="absolute right-0  bottom-0 transform  ">
                 <img src="{{ asset('images/img/background/bg-testimonio.png') }}" alt=""
-                    class="w-20 md:w-36 lg:w-48">
+                    class="w-20 md:w-36 lg:w-40">
             </div>
             <section class="w-11/12 text-center px-4 lg:max-w-3xl mx-auto mt-20 lg:mt-0">
                 <div class=" bg-opacity-50 flex items-center justify-center">
