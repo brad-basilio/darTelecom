@@ -176,8 +176,8 @@ class ServiceController extends Controller
             'subtitle' => 'nullable|string|max:255',
             'descripcion_breve' => 'nullable|string',
             'descripcion_extensa' => 'nullable|string',
-          'icono' => 'required|file|mimes:svg',
-            'imagen_principal' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'icono' => 'nullable|file|mimes:svg',
+            'imagen_principal' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         $service = Service::findOrfail($id);
