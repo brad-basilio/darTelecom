@@ -108,18 +108,230 @@
         }
 
         /* En tu archivo CSS */
-        aside nav ul li.active {
-            background-color: #ed1b2f;
-            /* Color de fondo para el elemento activo */
-            color: white;
-            /* Color de texto para el elemento activo */
+        aside nav ul li.active,
+        aside nav .swiper-slide li.active {
+            background-color: #ed1b2f !important;
+            color: white !important;
+            border: none !important;
         }
 
-        aside nav ul li.active div {
-            background-color: #FFFFFF;
-            /* Color de fondo para el elemento activo */
+        aside nav ul li.active div,
+        aside nav .swiper-slide li.active div {
+            background-color: #FFFFFF !important;
+        }
 
+        /* Estilos para el carrusel de servicios en mobile */
+        .servicios-swiper {
+            padding: 0 !important;
+            margin: 0 !important;
+            border: 0 !important;
+            outline: 0 !important;
+            box-shadow: none !important;
+        }
 
+        .servicios-swiper .swiper-slide {
+            height: auto;
+            display: flex;
+            justify-content: center;
+            border: 0 !important;
+            outline: 0 !important;
+            box-shadow: none !important;
+        }
+
+        .servicios-swiper .swiper-slide li {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            max-width: 200px;
+            margin: 0 auto;
+            border: 0 !important;
+            outline: 0 !important;
+            box-shadow: none !important;
+        }
+
+        /* Eliminar cualquier borde/outline del swiper activo */
+        .servicios-swiper .swiper-slide-active,
+        .servicios-swiper .swiper-slide-active li,
+        .servicios-swiper .swiper-slide-next,
+        .servicios-swiper .swiper-slide-prev {
+            border: 0 !important;
+            outline: 0 !important;
+            box-shadow: none !important;
+        }
+
+        /* CRÍTICO: Eliminar el shadow/border ROJO del slide activo de Swiper */
+        .servicios-swiper .swiper-slide-active::before,
+        .servicios-swiper .swiper-slide-active::after {
+            display: none !important;
+            content: none !important;
+            border: 0 !important;
+            box-shadow: none !important;
+        }
+
+        /* Forzar transparencia en cualquier pseudo-elemento del swiper */
+        .servicios-swiper .swiper-slide::before,
+        .servicios-swiper .swiper-slide::after,
+        .servicios-swiper .swiper-wrapper::before,
+        .servicios-swiper .swiper-wrapper::after {
+            display: none !important;
+            content: none !important;
+            border: 0 !important;
+            box-shadow: none !important;
+            background: transparent !important;
+        }
+
+        /* Eliminar cualquier efecto visual adicional del slide activo */
+        .servicios-swiper .swiper-slide-active {
+            transform: none !important;
+            filter: none !important;
+            opacity: 1 !important;
+            background: transparent !important;
+        }
+
+        /* Asegurar que el contenedor del swiper no tenga bordes */
+        .servicios-swiper .swiper-container,
+        .servicios-swiper.swiper {
+            border: 0 !important;
+            outline: 0 !important;
+            box-shadow: none !important;
+            background: transparent !important;
+        }
+
+        /* Asegurar que no haya bordes en ningún estado del swiper */
+        .servicios-swiper .swiper-wrapper,
+        .servicios-swiper .swiper-container {
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+        .servicios-next,
+        .servicios-prev {
+            width: 36px !important;
+            height: 36px !important;
+            margin-top: -18px !important;
+            background-color: #ed1b2f !important;
+            border-radius: 50% !important;
+            color: white !important;
+        }
+
+        .servicios-next:after,
+        .servicios-prev:after {
+            font-size: 16px !important;
+            font-weight: bold !important;
+        }
+
+        .servicios-next {
+            right: 5px !important;
+        }
+
+        .servicios-prev {
+            left: 5px !important;
+        }
+
+        .servicios-next.swiper-button-disabled,
+        .servicios-prev.swiper-button-disabled {
+            opacity: 0.3 !important;
+        }
+
+        /* Eliminar cualquier focus outline o borde del swiper */
+        .servicios-swiper *:focus,
+        .servicios-swiper *:focus-visible,
+        .servicios-swiper *:active {
+            outline: none !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        /* Resetear estilos específicos de Swiper que puedan causar bordes */
+        .servicios-swiper .swiper-slide::before,
+        .servicios-swiper .swiper-slide::after {
+            display: none !important;
+        }
+
+        /* Eliminar el marco rojo del swiper completo */
+        .servicios-swiper,
+        .servicios-swiper .swiper-container,
+        .servicios-swiper .swiper-wrapper,
+        aside nav > div {
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+            -webkit-box-shadow: none !important;
+            -moz-box-shadow: none !important;
+        }
+
+        /* AOS puede agregar efectos - eliminarlos del swiper */
+        [data-aos].lg\\:hidden {
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+        /* Forzar eliminación de TODOS los outlines, borders y shadows en el swiper de servicios */
+        aside nav .lg\\:hidden *,
+        aside nav .lg\\:hidden,
+        aside nav .servicios-swiper *,
+        aside nav .servicios-swiper {
+            border: 0 !important;
+            outline: 0 !important;
+            box-shadow: none !important;
+            -webkit-box-shadow: none !important;
+            -moz-box-shadow: none !important;
+        }
+
+        /* Eliminar ring de Tailwind en focus */
+        aside nav .servicios-swiper *:focus,
+        aside nav .servicios-swiper *:focus-within,
+        aside nav .servicios-swiper *:focus-visible {
+            --tw-ring-shadow: 0 0 #0000 !important;
+            --tw-ring-offset-shadow: 0 0 #0000 !important;
+            border: 0 !important;
+            outline: 0 !important;
+            box-shadow: none !important;
+        }
+
+        /* Eliminar cualquier borde del aside completo en mobile */
+        aside,
+        aside nav,
+        aside nav > *,
+        aside .lg\\:hidden {
+            border: 0 !important;
+            outline: 0 !important;
+            box-shadow: none !important;
+        }
+
+        /* Eliminar COMPLETAMENTE el outline/shadow de focus y active en TODOS los elementos */
+        aside *,
+        aside *:focus,
+        aside *:active,
+        aside *:focus-visible,
+        aside *:focus-within,
+        .servicios-swiper,
+        .servicios-swiper *,
+        .servicios-swiper *:focus,
+        .servicios-swiper *:active,
+        .servicios-swiper *:focus-visible,
+        .servicios-swiper li,
+        .servicios-swiper li:focus,
+        .servicios-swiper li:active,
+        .servicios-swiper a,
+        .servicios-swiper a:focus,
+        .servicios-swiper a:active {
+            outline: 0 !important;
+            outline-width: 0 !important;
+            outline-style: none !important;
+            outline-color: transparent !important;
+            border: 0 !important;
+            box-shadow: none !important;
+            -webkit-box-shadow: none !important;
+            -moz-box-shadow: none !important;
+            -webkit-tap-highlight-color: transparent !important;
+            --tw-ring-shadow: 0 0 #0000 !important;
+            --tw-ring-offset-shadow: 0 0 #0000 !important;
+            --tw-shadow: 0 0 #0000 !important;
+            --tw-shadow-colored: 0 0 #0000 !important;
         }
     </style>
 
@@ -177,7 +389,8 @@
                 <!-- Sidebar -->
                 <aside class="lg:w-1/4">
                     <nav class="">
-                        <ul class="grid grid-cols-2 lg:grid-cols-1 gap-4 " data-aos="fade-up" data-aos-offset="150"
+                        <!-- Desktop: Grid normal -->
+                        <ul class="hidden lg:grid grid-cols-1 gap-4" data-aos="fade-up" data-aos-offset="150"
                             data-aos-duration="1000" data-aos-delay="200">
                             @foreach ($servicios as $index => $servicioItem)
                                 <li data-slug="{{ $servicioItem->slug }}"
@@ -192,6 +405,32 @@
                                 </li>
                             @endforeach
                         </ul>
+                        
+                        <!-- Mobile: Swiper Carousel -->
+                        <div class="lg:hidden" data-aos="fade-up" data-aos-offset="150" data-aos-duration="1000" data-aos-delay="200" style="border: none !important; outline: none !important; box-shadow: none !important;">
+                            <div class="swiper servicios-swiper" style="border: none !important; outline: none !important; box-shadow: none !important;">
+                                <div class="swiper-wrapper" style="border: none !important; outline: none !important; box-shadow: none !important;">
+                                    @foreach ($servicios as $index => $servicioItem)
+                                        <div class="swiper-slide" style="border: none !important; outline: none !important; box-shadow: none !important;">
+                                            <li data-slug="{{ $servicioItem->slug }}"
+                                                class="cursor-pointer group rounded-xl flex items-center gap-3 p-3 text-text16 font-semibold bg-colorBackgroundAzulClaro hover:bg-colorBackgroundRed text-colorAzulOscuro hover:text-white transition-all duration-300 {{ isset($servicioSeleccionado) && $servicioSeleccionado == $servicioItem->slug ? 'active' : ($index === 0 && !isset($servicioSeleccionado) ? 'active' : '') }}"
+                                                style="border: none !important; outline: none !important; box-shadow: none !important;">
+                                                <div class="group-hover:hidden min-h-6 min-w-6 bg-black {{ isset($servicioSeleccionado) && $servicioSeleccionado == $servicioItem->slug ? 'hidden' : '' }}"
+                                                    style="mask-image: url('{{ asset($servicioItem->icono) }}'); mask-size: contain; mask-repeat: no-repeat;">
+                                                </div>
+                                                <div class="hidden group-hover:inline-block h-6 w-6 bg-white {{ isset($servicioSeleccionado) && $servicioSeleccionado == $servicioItem->slug ? '!inline-block' : '' }}"
+                                                    style="mask-image: url('{{ asset($servicioItem->icono) }}'); mask-size: contain; mask-repeat: no-repeat;">
+                                                </div>
+                                                <a href="#" class="servicio-link text-sm">{{ $servicioItem->title }}</a>
+                                            </li>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                <!-- Navegación del swiper -->
+                                <div class="swiper-button-next servicios-next"></div>
+                                <div class="swiper-button-prev servicios-prev"></div>
+                            </div>
+                        </div>
                     </nav>
                 </aside>
 
@@ -226,7 +465,55 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const sidebarItems = document.querySelectorAll('aside nav ul li');
+            // Inicializar el carrusel de servicios para mobile
+            const serviciosSwiper = new Swiper('.servicios-swiper', {
+                slidesPerView: 1,
+                spaceBetween: 20,
+                centeredSlides: true,
+                // Desactivar efectos visuales que puedan causar el borde
+                effect: 'slide',
+                watchSlidesProgress: false,
+                watchSlidesVisibility: false,
+                navigation: {
+                    nextEl: '.servicios-next',
+                    prevEl: '.servicios-prev',
+                },
+                breakpoints: {
+                    640: {
+                        slidesPerView: 2,
+                        spaceBetween: 20,
+                        centeredSlides: false,
+                    },
+                    768: {
+                        slidesPerView: 2,
+                        spaceBetween: 20,
+                        centeredSlides: false,
+                    }
+                },
+                // Eventos para forzar eliminación de estilos
+                on: {
+                    init: function() {
+                        removeActiveStyles();
+                    },
+                    slideChange: function() {
+                        removeActiveStyles();
+                    }
+                }
+            });
+
+            // Función para eliminar estilos del slide activo
+            function removeActiveStyles() {
+                setTimeout(() => {
+                    const activeSlides = document.querySelectorAll('.servicios-swiper .swiper-slide-active');
+                    activeSlides.forEach(slide => {
+                        slide.style.border = '0';
+                        slide.style.outline = '0';
+                        slide.style.boxShadow = 'none';
+                    });
+                }, 10);
+            }
+
+            const sidebarItems = document.querySelectorAll('aside nav ul li, aside nav .swiper-slide li');
             const mainContent = document.getElementById('main-content');
 
             // Función para cargar el contenido del servicio
@@ -235,6 +522,11 @@
                     .then(response => response.text())
                     .then(data => {
                         mainContent.innerHTML = data;
+                        
+                        // Disparar evento para que los componentes se reinicialicen
+                        setTimeout(() => {
+                            window.dispatchEvent(new CustomEvent('contenidoCargado'));
+                        }, 100);
                     })
                     .catch(error => console.error('Error al cargar el servicio:', error));
             }
@@ -243,30 +535,56 @@
             sidebarItems.forEach(item => {
                 item.addEventListener('click', function(e) {
                     e.preventDefault();
+                    
+                    // Quitar el foco del elemento inmediatamente para evitar el outline
+                    this.blur();
+                    if (e.target) e.target.blur();
+                    if (document.activeElement) document.activeElement.blur();
 
-                    // Remover la clase 'active' de todos los elementos
-                    sidebarItems.forEach(i => i.classList.remove('active'));
+                    // Remover la clase 'active' de todos los elementos (desktop y mobile)
+                    document.querySelectorAll('aside nav ul li, aside nav .swiper-slide li').forEach(i => i.classList.remove('active'));
 
                     // Agregar la clase 'active' al elemento seleccionado
                     item.classList.add('active');
 
-                    // Obtener el slug del servicio y cargar su contenido
+                    // También sincronizar el estado activo entre desktop y mobile
                     const servicioSlug = item.getAttribute('data-slug');
+                    document.querySelectorAll(`[data-slug="${servicioSlug}"]`).forEach(el => {
+                        el.classList.add('active');
+                    });
+
+                    // Cargar contenido
                     loadServicioContent(servicioSlug);
+                });
+                
+                // También manejar touchstart para mobile
+                item.addEventListener('touchstart', function(e) {
+                    setTimeout(() => {
+                        this.blur();
+                        if (document.activeElement) document.activeElement.blur();
+                    }, 10);
                 });
             });
 
             // Cargar el contenido del servicio seleccionado o el primer servicio por defecto
             if (sidebarItems.length > 0) {
                 // Buscar si hay un servicio activo (seleccionado desde la URL)
-                const activeItem = document.querySelector('aside nav ul li.active');
+                const activeItem = document.querySelector('aside nav ul li.active, aside nav .swiper-slide li.active');
                 if (activeItem) {
                     const servicioSlug = activeItem.getAttribute('data-slug');
+                    // Sync active state between desktop and mobile
+                    document.querySelectorAll(`[data-slug="${servicioSlug}"]`).forEach(el => {
+                        el.classList.add('active');
+                    });
                     loadServicioContent(servicioSlug);
                 } else {
                     // Si no hay activo, cargar el primer servicio
                     const firstItem = sidebarItems[0];
                     const servicioSlug = firstItem.getAttribute('data-slug');
+                    // Sync active state between desktop and mobile
+                    document.querySelectorAll(`[data-slug="${servicioSlug}"]`).forEach(el => {
+                        el.classList.add('active');
+                    });
                     loadServicioContent(servicioSlug);
                 }
             }

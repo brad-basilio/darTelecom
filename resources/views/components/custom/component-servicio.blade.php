@@ -62,8 +62,8 @@
                <div class="swiper-wrapper">
                    @foreach ($album->images as $image)
                        <div class="swiper-slide">
-                           <div class="rounded-xl overflow-hidden">
-                               <img class="!w-full aspect-video rounded-lg cursor-pointer object-cover"
+                           <div class="rounded-xl overflow-hidden w-full">
+                               <img class="w-full !aspect-square lg:!aspect-video rounded-lg cursor-pointer object-cover"
                                    src="{{ asset($image->url_image) }}" alt="{{ $image->name_image }}">
                            </div>
                        </div>
