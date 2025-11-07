@@ -348,15 +348,16 @@
             style="background-image: linear-gradient(to right, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)), url('{{ asset($servicioParaHeader?->imagen_principal ?? $servicioPage?->imagen) }}'); background-position: center center; background-size: cover; background-attachment: fixed;">
         </div>
 
-        <section class="relative w-full"> <!-- Subheader -->
-            <div class="absolute left-0  top-0 transform rotate-180 ">
+        <section class="relative w-full "> <!-- Subheader -->
+            <!--<div class="absolute left-0  top-0 transform rotate-180 ">
                 <img src="{{ asset('images/img/background/bg-testimonio.png') }}" alt="" class="w-20 md:w-36 lg:w-40">
             </div>
             <div class="absolute right-0  bottom-0 transform  ">
                 <img src="{{ asset('images/img/background/bg-testimonio.png') }}" alt=""
                     class="w-20 md:w-36 lg:w-40">
-            </div>
-            <section class="w-11/12 text-center px-4 lg:max-w-3xl mx-auto mt-20 lg:mt-0">
+            </div>-->
+            <div class="bg-colorBackgroundAzulClaro pb-6">
+                <section class="w-11/12 text-center px-4 lg:max-w-3xl mx-auto mt-20 lg:mt-0">
                 <div class=" bg-opacity-50 flex items-center justify-center">
                     <h1 class="text-colorAzulOscuro pt-8 text-text40 lg:text-text48 font-bold mb-2" data-aos="fade-up"
                         data-aos-offset="150" data-aos-duration="1000" data-aos-delay="200">
@@ -383,6 +384,7 @@
                     @endif
                 </div>
                 @endif
+            </div>
 
             @if($servicios && $servicios->count() > 0)
             <div class="w-11/12 lg:max-w-7xl mx-auto px-4 flex flex-col lg:flex-row gap-8 pt-8">

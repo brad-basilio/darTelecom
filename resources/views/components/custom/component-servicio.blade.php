@@ -37,8 +37,8 @@
    <div class="flex flex-col md:flex-row items-start md:justify-between md:items-center mb-4 md:mb-0" data-aos="fade-up"
        data-aos-offset="150" data-aos-duration="1000" data-aos-delay="200">
        <div class="max-w-[90%]">
-           <h2 class="text-colorRojo text-text32 font-extrabold">{{ $servicio->title }}</h2>
-           <h3 class="text-text32 font-semibold mb-4">{{ $servicio->subtitle }}</h3>
+           <h2 class="text-colorRojo text-[30px] lg:text-text32 font-extrabold">{{ $servicio->title }}</h2>
+           <h3 class="text-text28 lg:text-text32 font-semibold mb-4">{{ $servicio->subtitle }}</h3>
        </div>
        <x-custom.button-cotizar :general="$general" text="CONTÁCTANOS" />
    </div>
