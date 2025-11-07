@@ -54,6 +54,11 @@
             justify-content: space-between;
             margin-top: 16px;
         }
+        
+        /* Estilos para el filtro colapsable en mobile */
+        details[open] {
+            transition: all 0.3s ease-in-out;
+        }
     </style>
 @stop
 
@@ -69,7 +74,8 @@
 
 
         <div class="w-11/12 lg:max-w-7xl flex flex-col md:flex-row md:gap-10 mx-auto py-12  ">
-            <aside class="flex flex-col gap-10 md:w-3/12 gap-4">
+            
+            <aside id="filterAside" class="flex flex-col gap-4 md:w-3/12">
 
                 <div class="">
                     <div class=" md:flex flex-col gap-10 ">
@@ -133,7 +139,7 @@
                             <div class="relative">
                                 <div class="mx-auto">
                                     <div class="mx-auto grid w-full lg:max-w-[900px] divide-y divide-neutral-200">
-                                        <details class="group">
+                                        <details class="group" id="detailsMarcas">
                                             <summary
                                                 class="flex cursor-pointer list-none items-center justify-between font-medium pr-1">
                                                 <span class="font-boldDisplay text-text14 text-[#151515]">
@@ -526,6 +532,24 @@
                 priceMax: {{ $precioMaximo }},
                 sort: 'default'
             };
+            
+            // Función para colapsar el details de marcas en mobile
+            function collapseMarcasDetailsMobile() {
+                if (window.innerWidth < 768) {
+                    const detailsMarcas = document.getElementById('detailsMarcas');
+                    if (detailsMarcas) {
+                        detailsMarcas.removeAttribute('open');
+                        
+                        // Scroll suave hacia la sección de productos
+                        setTimeout(() => {
+                            const productsSection = document.querySelector('#productList');
+                            if (productsSection) {
+                                productsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }
+                        }, 300);
+                    }
+                }
+            }
 
             // Función para aplicar filtros
             function applyFilters() {
@@ -563,6 +587,9 @@
                     filters.brands = filters.brands.filter(id => id != brandId);
                 }
                 applyFilters();
+                
+                // Colapsar el details de marcas en mobile después de seleccionar
+                collapseMarcasDetailsMobile();
             });
 
             // Evento para precios
@@ -573,10 +600,6 @@
             });
 
             // Evento para ordenamiento
-            /* $('.sort-item').on('click', function() {
-                 filters.sort = $(this).data('sort-by');
-                 applyFilters();
-             });*/
             $('.sort-checkbox').on('change', function() {
                 // Desmarcar todos los checkboxes excepto el actual
                 $('.sort-checkbox').not(this).prop('checked', false);
