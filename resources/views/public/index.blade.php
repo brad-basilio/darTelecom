@@ -388,6 +388,9 @@
                         <div style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff"
                             class="swiper mySwiper2 swiper-css" data-aos="fade-left" data-aos-offset="150"
                             data-aos-duration="1000" data-aos-delay="200">
+                            <h2 class="text-text32 lg:text-text40 font-bold text-colorRojo mb-4 text-center">
+                                Testimonios
+                            </h2>
                             <div class="swiper-wrapper swiper-wrapper-css">
                                 @foreach ($testimonios as $testimonio)
                                     <div class="swiper-slide cursor-pointer swiper-slide-css">
