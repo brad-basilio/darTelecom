@@ -76,7 +76,7 @@
                                                 <span class="font-medium">{{ $servicioItem->title }}</span>
                                             </div>
                                             @if($servicioItem->descripcion_breve)
-                                                <p class="text-xs text-gray-500 mt-1 ml-8">{{ Str::limit($servicioItem->descripcion_breve, 60) }}</p>
+                                                <!--p class="text-xs text-gray-500 mt-1 ml-8">{{ Str::limit($servicioItem->descripcion_breve, 60) }}</p-->
                                             @endif
                                         </a>
                                     @endforeach

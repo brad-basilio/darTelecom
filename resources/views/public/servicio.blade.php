@@ -214,6 +214,9 @@
             background-color: #ed1b2f !important;
             border-radius: 50% !important;
             color: white !important;
+            display: flex !important;
+            opacity: 1 !important;
+            visibility: visible !important;
         }
 
         .servicios-next:after,
@@ -233,6 +236,7 @@
         .servicios-next.swiper-button-disabled,
         .servicios-prev.swiper-button-disabled {
             opacity: 0.3 !important;
+            visibility: visible !important;
         }
 
         /* Eliminar cualquier focus outline o borde del swiper */
@@ -496,12 +500,33 @@
                 on: {
                     init: function() {
                         removeActiveStyles();
+                        // Forzar visibilidad de los botones
+                        showNavigationButtons();
                     },
                     slideChange: function() {
                         removeActiveStyles();
                     }
                 }
             });
+
+            // Función para forzar la visibilidad de los botones
+            function showNavigationButtons() {
+                setTimeout(() => {
+                    const nextBtn = document.querySelector('.servicios-next');
+                    const prevBtn = document.querySelector('.servicios-prev');
+                    
+                    if (nextBtn) {
+                        nextBtn.style.display = 'flex';
+                        nextBtn.style.visibility = 'visible';
+                        nextBtn.style.opacity = '1';
+                    }
+                    if (prevBtn) {
+                        prevBtn.style.display = 'flex';
+                        prevBtn.style.visibility = 'visible';
+                        prevBtn.style.opacity = '1';
+                    }
+                }, 100);
+            }
 
             // Función para eliminar estilos del slide activo
             function removeActiveStyles() {

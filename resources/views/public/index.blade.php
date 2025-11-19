@@ -289,9 +289,11 @@
                                     </div>
                                     <h3 class="text-text28 font-semibold mb-2 text-colorAzulOscuro">{{ $servicio->title }}
                                     </h3>
-                                    <p class="text-colorParrafo line-clamp-2 mb-4 text-text16">
+                                    <!-- IGNORE 
+                                     <p class="text-colorParrafo line-clamp-2 mb-4 text-text16">
                                         {{ $servicio->descripcion_breve }}
                                     </p>
+                                    -->
                                     <a href="{{ route('servicios') }}"
                                         class="bg-colorBackgroundRed hover:bg-colorBackgroundRed rounded-full text-white font-semibold px-4 py-2 inline-block">
                                         Ver más
