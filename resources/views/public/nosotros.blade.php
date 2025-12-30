@@ -15,7 +15,7 @@
                 {!! $nosotros?->breve_historia !!}
             </div>
 
-            <img class="w-full my-16 rounded-xl object-contain h-[400px] lg:h-[629px]" src="{{ asset($nosotros?->imagen) }}"
+            <img class="w-full my-16 rounded-xl object-cover h-[400px] lg:h-[629px]" src="{{ asset($nosotros?->imagen) }}"
                 alt="{{ $nosotros?->title }}" data-aos="fade-up" data-aos-offset="150" data-aos-duration="1000"
                 data-aos-delay="200" />
         </section>
@@ -50,7 +50,7 @@
                 </div>
                 <div>
                     <img src="{{ asset($nosotros?->imagen_vision_mision) }}" alt="Nuestra vision y mision"
-                        class="w-full h-[400px] lg:h-[770px] object-contain rounded-xl">
+                        class="w-full h-[400px] lg:h-[770px] object-cover rounded-xl">
                 </div>
             </div>
         </section>
@@ -59,7 +59,7 @@
                 data-aos-offset="150" data-aos-duration="1000" data-aos-delay="200">
                 <div>
                     <img src="{{ asset($nosotros?->imagen_sello_garantia) }}" alt="{{ $nosotros?->sello_garantia_titulo }}"
-                        class="w-full h-[400px] lg:h-[518px] object-contain rounded-xl">
+                        class="w-full  lg:h-[518px] object-contain lg:object-cover rounded-xl">
                 </div>
 
                 <div class="flex flex-col gap-12">
