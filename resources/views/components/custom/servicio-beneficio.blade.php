@@ -3,10 +3,10 @@
         <div data-aos="fade-up" data-aos-offset="150" data-aos-duration="1000" data-aos-delay="200"
             class=" cursor-pointer bg-colorBackgroundAzulClaro p-6 text-start flex flex-col items-start rounded-xl">
             <div class=" h-10 w-10 bg-colorBackgroundRed"
-                style="mask-image: url('{{ asset($icono) }}'); mask-size: cover; mask-repeat: no-repeat;"">
+                style="mask-image: url('{{ asset($icono) }}'); mask-size: cover; mask-repeat: no-repeat;">
             </div>
-            <h4 class="font-semibold mb-2 text-colorAzulOscuro text-text28">Beneficio {{ $index + 1 }}</h4>
-            <p class="text-colorParrafo text-text16">{{ $beneficio }}</p>
+            <h4 class="font-semibold mb-2 text-colorAzulOscuro text-text28">{{ $beneficio['titulo'] }}</h4>
+            <p class="text-colorParrafo text-text16">{{ $beneficio['descripcion'] }}</p>
         </div>
     @endforeach
 </div>
@@ -19,8 +19,8 @@
                         <div class="h-8 w-8 bg-colorBackgroundRed mb-3 flex-shrink-0"
                             style="mask-image: url('{{ asset($icono) }}'); mask-size: cover; mask-repeat: no-repeat;">
                         </div>
-                        <h4 class="font-semibold mb-2 text-colorAzulOscuro text-lg">Beneficio {{ $index + 1 }}</h4>
-                        <p class="text-colorParrafo text-sm flex-grow">{{ $beneficio }}</p>
+                        <h4 class="font-semibold mb-2 text-colorAzulOscuro text-lg">{{ $beneficio['titulo'] }}</h4>
+                        <p class="text-colorParrafo text-sm flex-grow">{{ $beneficio['descripcion'] }}</p>
                     </div>
                 </div>
             @endforeach

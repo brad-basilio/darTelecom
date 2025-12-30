@@ -85,15 +85,16 @@
 
                                 <!-- Beneficios -->
                                 <div class="md:col-span-5">
-                                    <label for="beneficios">Beneficios del subservicio</label>
-                                    <span class="text-colorRojo ml-4 text-xs">( Menciona los beneficios separados por punto y coma ";")</span>
-                                    <div class="relative mb-2 mt-2">
-                                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                            <i class="fa-regular fa-pen-to-square"></i>
-                                        </div>
-                                        <textarea type="text" rows="2" id="beneficios" name="beneficios"
-                                            class="mt-1 min-h-24 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder="Ej. Implementación rápida; Soporte técnico prioritario">{{ old('beneficios', $subservicio->beneficios) }}</textarea>
+                                    <div class="flex items-center justify-between mb-2">
+                                        <label>Beneficios del subservicio</label>
+                                        <button type="button" onclick="agregarBeneficio()" 
+                                            class="bg-blue-500 hover:bg-blue-700 text-white text-sm font-semibold py-1 px-3 rounded flex items-center gap-1">
+                                            <i class="fa-solid fa-plus"></i> Agregar Beneficio
+                                        </button>
+                                    </div>
+                                    <input type="hidden" name="beneficios" id="beneficios_hidden" value="{{ old('beneficios', $subservicio->beneficios) }}">
+                                    <div id="beneficios-container" class="space-y-3">
+                                        <!-- Los beneficios se cargan aquí dinámicamente -->
                                     </div>
                                     @error('beneficios')
                                         <span class="text-red-500 text-xs">{{ $message }}</span>
@@ -425,5 +426,94 @@
                 }
             });
         }
+
+        // ===== BENEFICIOS DINÁMICOS =====
+        let beneficioCount = 0;
+
+        function agregarBeneficio(titulo = '', descripcion = '') {
+            beneficioCount++;
+            const container = document.getElementById('beneficios-container');
+            const beneficioHTML = `
+                <div class="beneficio-item bg-gray-50 dark:bg-gray-700 p-4 rounded-lg border border-gray-200 dark:border-gray-600" data-index="${beneficioCount}">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-semibold text-gray-700 dark:text-gray-300">Beneficio ${beneficioCount}</span>
+                        <button type="button" onclick="eliminarBeneficio(this)" class="text-red-500 hover:text-red-700">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                            <label class="text-xs text-gray-500 dark:text-gray-400">Título (opcional)</label>
+                            <input type="text" class="beneficio-titulo mt-1 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                                placeholder="Ej: Rapidez" value="${titulo}" onchange="actualizarBeneficiosHidden()">
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-500 dark:text-gray-400">Descripción</label>
+                            <input type="text" class="beneficio-descripcion mt-1 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                                placeholder="Ej: Implementación en 24 horas" value="${descripcion}" onchange="actualizarBeneficiosHidden()">
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', beneficioHTML);
+            actualizarBeneficiosHidden();
+        }
+
+        function eliminarBeneficio(btn) {
+            btn.closest('.beneficio-item').remove();
+            actualizarNumeracion();
+            actualizarBeneficiosHidden();
+        }
+
+        function actualizarNumeracion() {
+            const items = document.querySelectorAll('.beneficio-item');
+            items.forEach((item, index) => {
+                item.querySelector('span').textContent = `Beneficio ${index + 1}`;
+            });
+            beneficioCount = items.length;
+        }
+
+        function actualizarBeneficiosHidden() {
+            const items = document.querySelectorAll('.beneficio-item');
+            const beneficios = [];
+            items.forEach((item, index) => {
+                const titulo = item.querySelector('.beneficio-titulo').value.trim();
+                const descripcion = item.querySelector('.beneficio-descripcion').value.trim();
+                if (descripcion) {
+                    if (titulo) {
+                        beneficios.push(`${titulo}|${descripcion}`);
+                    } else {
+                        beneficios.push(descripcion);
+                    }
+                }
+            });
+            document.getElementById('beneficios_hidden').value = beneficios.join(';');
+        }
+
+        function cargarBeneficiosExistentes() {
+            const beneficiosStr = document.getElementById('beneficios_hidden').value;
+            if (!beneficiosStr) {
+                agregarBeneficio();
+                return;
+            }
+            
+            const items = beneficiosStr.split(';');
+            items.forEach(item => {
+                item = item.trim();
+                if (!item) return;
+                
+                if (item.includes('|')) {
+                    const parts = item.split('|');
+                    agregarBeneficio(parts[0].trim(), parts[1] ? parts[1].trim() : '');
+                } else {
+                    agregarBeneficio('', item);
+                }
+            });
+        }
+
+        // Cargar beneficios existentes al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            cargarBeneficiosExistentes();
+        });
     </script>
 </x-app-layout>
