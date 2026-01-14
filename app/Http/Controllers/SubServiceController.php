@@ -50,10 +50,21 @@ class SubServiceController extends Controller
         try {
             $service = Service::findOrFail($serviceId);
             
-            // Generar slug único
-            $slug = Str::slug($request->title);
-            while (SubService::where('slug', $slug)->exists()) {
-                $slug = Str::slug($request->title) . '-' . uniqid();
+            // Crear el álbum contenedor principal para subservicios
+            $SubservicesAlbum = Album::firstOrCreate(
+                ['name' => 'Subservicios'],
+                ['description' => 'Contenedor principal para los Subservicios.']
+            );
+
+            // Generar slug único (verificar tanto en SubService como en Album globalmente)
+            $baseSlug = Str::slug($request->title);
+            $slug = $baseSlug;
+            
+            while (
+                SubService::where('slug', $slug)->exists() || 
+                Album::where('name', $slug)->exists()
+            ) {
+                $slug = $baseSlug . '-' . Str::random(6);
             }
 
             // Crear las carpetas necesarias
@@ -70,11 +81,6 @@ class SubServiceController extends Controller
             }
 
             // Crear el álbum del subservicio
-            $SubservicesAlbum = Album::firstOrCreate(
-                ['name' => 'Subservicios'],
-                ['description' => 'Contenedor principal para los Subservicios.']
-            );
-
             $album = Album::create([
                 'name' => $subFolder,
                 'parent_id' => $SubservicesAlbum->id
