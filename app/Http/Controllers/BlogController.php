@@ -198,9 +198,22 @@ class BlogController extends Controller
     // Guardar el título anterior para actualizar el álbum y la carpeta
     $oldTitle = $blog->slug;
 
+    \Log::info('Blog Update Debug', [
+        'request_id' => $request->id,
+        'blog_model_id' => $blog->id,
+        'oldTitle' => $oldTitle,
+        'newTitle' => $newTitle,
+        'request_titulo' => $request->titulo,
+    ]);
+
     // Verificar si ya existe un producto con el mismo nombre (excluyendo el producto actual)
     $existingBlog = Blog::where('slug', $newTitle)->where('id', '!=', $blog->id)->first();
+    
     if ($existingBlog) {
+      \Log::warning('Duplicate Blog found', [
+          'existing_blog_id' => $existingBlog->id,
+          'existing_blog_slug' => $existingBlog->slug,
+      ]);
       return redirect()->back()
         ->withInput()
         ->with('error', 'Ya existe un Post con ese nombre.');
