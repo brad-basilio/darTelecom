@@ -113,10 +113,13 @@
                     text: "Vas a eliminar una publicación.",
                     icon: "warning",
                     showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
                     confirmButtonText: "Sí, borrar!",
-                    cancelButtonText: "Cancelar"
+                    cancelButtonText: "Cancelar",
+                    customClass: {
+                        confirmButton: "bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded",
+                        cancelButton: "bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded ml-3"
+                    },
+                    buttonsStyling: false
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
