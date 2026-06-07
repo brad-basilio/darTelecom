@@ -72,6 +72,17 @@ class BlogController extends Controller
     $data = $request->all();
     $data['slug'] = Str::slug($request->titulo);
 
+    // Verificar si ya existe un blog con este slug
+    $existingBlog = Blog::where('slug', $data['slug'])->first();
+    if ($existingBlog) {
+        return response()->json([
+            'message' => 'El título generado ya está en uso por otro post.',
+            'errors' => [
+                'titulo' => ['Ya existe un Post con ese nombre o un título muy similar.']
+            ]
+        ], 422);
+    }
+
     try {
       // **Paso 1: Crear la carpeta principal "Blogs" si no existe**
       $mainFolder = 'Blogs';
