@@ -136,12 +136,17 @@ class BlogController extends Controller
       }
       $blog->save();
 
-      // 📌 Enviar correos en lotes de 50
-      NewsletterSubscriber::where('active', true)->chunk(50, function ($subscribers) use ($blog) {
-        foreach ($subscribers as $subscriber) {
-          SendBlogEmailJob::dispatch($blog, $subscriber->email);
-        }
-      });
+      // 📌 Enviar correos en lotes de 50 (Envuelto en try-catch para evitar que un error SMTP bloquee la creación)
+      try {
+        NewsletterSubscriber::where('active', true)->chunk(50, function ($subscribers) use ($blog) {
+          foreach ($subscribers as $subscriber) {
+            SendBlogEmailJob::dispatch($blog, $subscriber->email);
+          }
+        });
+      } catch (\Throwable $emailError) {
+        // Registramos el error pero no detenemos el proceso, ya que el post ya fue guardado
+        \Log::error('Error enviando correos de notificación del blog: ' . $emailError->getMessage());
+      }
 
       // 📌 DEVOLVER JSON PARA AJAX
       return response()->json([
