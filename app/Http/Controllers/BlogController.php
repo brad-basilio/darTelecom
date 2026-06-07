@@ -70,18 +70,17 @@ class BlogController extends Controller
     ]);
 
     $data = $request->all();
-    $data['slug'] = Str::slug($request->titulo);
+    $originalSlug = Str::slug($request->titulo);
+    $slug = $originalSlug;
+    $count = 1;
 
-    // Verificar si ya existe un blog con este slug
-    $existingBlog = Blog::where('slug', $data['slug'])->first();
-    if ($existingBlog) {
-        return response()->json([
-            'message' => 'El título generado ya está en uso por otro post.',
-            'errors' => [
-                'titulo' => ['Ya existe un Post con ese nombre o un título muy similar.']
-            ]
-        ], 422);
+    // Generar un slug único si ya existe
+    while (Blog::where('slug', $slug)->exists()) {
+        $slug = $originalSlug . '-' . $count;
+        $count++;
     }
+    
+    $data['slug'] = $slug;
 
     try {
       // **Paso 1: Crear la carpeta principal "Blogs" si no existe**
@@ -210,7 +209,16 @@ class BlogController extends Controller
       'destacado' => 'nullable|boolean',
 
     ]);
-    $newTitle = Str::slug($request->titulo);
+    $originalSlug = Str::slug($request->titulo);
+    $newTitle = $originalSlug;
+    $count = 1;
+
+    // Generar un slug único si el slug ya le pertenece a otro post
+    while (Blog::where('slug', $newTitle)->where('id', '!=', $blog->id)->exists()) {
+        $newTitle = $originalSlug . '-' . $count;
+        $count++;
+    }
+
     // Guardar el título anterior para actualizar el álbum y la carpeta
     $oldTitle = $blog->slug;
 
@@ -221,19 +229,6 @@ class BlogController extends Controller
         'newTitle' => $newTitle,
         'request_titulo' => $request->titulo,
     ]);
-
-    // Verificar si ya existe un producto con el mismo nombre (excluyendo el producto actual)
-    $existingBlog = Blog::where('slug', $newTitle)->where('id', '!=', $blog->id)->first();
-    
-    if ($existingBlog) {
-      \Log::warning('Duplicate Blog found', [
-          'existing_blog_id' => $existingBlog->id,
-          'existing_blog_slug' => $existingBlog->slug,
-      ]);
-      return redirect()->back()
-        ->withInput()
-        ->with('error', 'Ya existe un Post con ese nombre.');
-    }
     try {
       $data = $request->all();
       // **Paso 1: Obtener la carpeta actual del producto**
