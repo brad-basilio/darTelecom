@@ -33,9 +33,9 @@
                                         <i class="fa-regular fa-pen-to-square"></i>
                                     </div>
                                     <textarea type="text" id="extracto" name="extracto" value=""
-                                        class="mt-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 @error('extract') is-invalid @enderror"
+                                        class="mt-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 @error('extracto') is-invalid @enderror"
                                         placeholder="Extracto"></textarea>
-                                    @error('extract')
+                                    @error('extracto')
                                         <div style="color: red;">{{ $message }}</div>
                                     @enderror
 
@@ -186,11 +186,24 @@
                         });
                     },
                     error: function(xhr) {
-                        Swal.fire({
-                            title: "Error",
-                            text: "Hubo un problema al crear la publicación.",
-                            icon: "error"
-                        });
+                        let errorMessage = "Hubo un problema al crear la publicación.";
+                        if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
+                            let errors = Object.values(xhr.responseJSON.errors).flat();
+                            errorMessage = "<ul style='text-align: left; list-style-type: disc; padding-left: 20px;'>" + 
+                                errors.map(err => "<li>" + err + "</li>").join("") + 
+                                "</ul>";
+                            Swal.fire({
+                                title: "Campos requeridos o inválidos",
+                                html: errorMessage,
+                                icon: "warning"
+                            });
+                        } else {
+                            Swal.fire({
+                                title: "Error",
+                                text: errorMessage,
+                                icon: "error"
+                            });
+                        }
                     }
                 });
             });

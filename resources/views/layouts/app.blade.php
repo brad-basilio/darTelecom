@@ -154,7 +154,7 @@
             Swal.fire({
                 icon: 'info',
                 title: 'Información',
-                text: "{{ session('error') }}",
+                text: "{{ session('info') }}",
                 confirmButtonText: 'Aceptar'
             });
         @endif

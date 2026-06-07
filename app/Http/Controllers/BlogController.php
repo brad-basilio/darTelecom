@@ -183,7 +183,7 @@ class BlogController extends Controller
     }
   }
 
-  public function update(Request $request, $id)
+  public function update(Request $request, Blog $blog)
   {
     $request->validate([
       'titulo' => 'required|string|max:255',
@@ -194,13 +194,12 @@ class BlogController extends Controller
       'destacado' => 'nullable|boolean',
 
     ]);
-    $blog = Blog::findOrFail($id);
     $newTitle = Str::slug($request->titulo);
     // Guardar el título anterior para actualizar el álbum y la carpeta
     $oldTitle = $blog->slug;
 
     // Verificar si ya existe un producto con el mismo nombre (excluyendo el producto actual)
-    $existingBlog = Blog::where('slug', Str::slug($request->titulo))->where('id', '!=', $id)->first();
+    $existingBlog = Blog::where('slug', $newTitle)->where('id', '!=', $blog->id)->first();
     if ($existingBlog) {
       return redirect()->back()
         ->withInput()
@@ -249,7 +248,7 @@ class BlogController extends Controller
         'descripcion' => $request->descripcion,
         'destacado' => $request->has('destacado'),
         'imagen' => $data['imagen'] ?? $blog->imagen,
-        'slug' => $data['slug'] ??  $blog->slug,
+        'slug' => $newTitle,
         'fecha_publicacion' => $blog->fecha_publicacion,
         'fecha_descatado' => $request->has('destacado') ? date('Y-m-d') : $blog->fecha_descatado,
         'category_post_id' => $request->category_post_id
@@ -261,7 +260,7 @@ class BlogController extends Controller
     } catch (ValidationException $e) {
       return redirect()->back()->withErrors($e->validator)->withInput();
     } catch (\Throwable $th) {
-      return redirect()->route('blog.edit', $id)->with('error', 'Error al actualizar el Post.');
+      return redirect()->route('blog.edit', $blog->id)->with('error', 'Error al actualizar el Post.');
     }
   }
 

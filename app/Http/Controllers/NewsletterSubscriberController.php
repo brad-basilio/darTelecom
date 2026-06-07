@@ -138,8 +138,8 @@ class NewsletterSubscriberController extends Controller
     $subscriber = NewsletterSubscriber::where('verification_token', $token)->first();
 
     if (!$subscriber) {
-      // return redirect('/')->with('error', 'Token de verificación inválido.');
-      session()->flash('error', 'Token de verificación inválido.');
+      session()->flash('error', 'Token de verificación inválido o ya confirmado.');
+      return redirect('/');
     }
 
     $subscriber->update([
@@ -152,7 +152,6 @@ class NewsletterSubscriberController extends Controller
     //  $this->envioCorreoCliente($subscriber);
 
     session()->flash('success', 'Tu suscripción ha sido confirmada.');
-    // return redirect('/')->with('success', 'Tu suscripción ha sido confirmada.');
     return redirect('/');
   }
 
