@@ -849,7 +849,7 @@ class IndexController extends Controller
   {
     $post = Blog::where('slug', '=', $slug)
       ->with('category')
-      ->first();
+      ->firstOrFail();
 
     $postsrelacionados = Blog::where('visible', '=', 1)
       ->where('category_post_id', '=', $post->category_post_id)

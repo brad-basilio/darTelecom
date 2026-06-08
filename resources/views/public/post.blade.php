@@ -28,13 +28,11 @@
              data-aos-duration="1000" data-aos-delay="200">
 
              @if ($post->imagen)
-                 <div class="w-full" data-aos="fade-up" data-aos-offset="150">
-                     <img src="{{ asset($post->imagen) }}" alt="{{ $post->titulo }}"
-                         class="w-full h-[500px] object-cover hidden md:block rounded-xl" />
-                     <img src="{{ asset($post->imagen) }}" alt="{{ $post->titulo }}"
-                         class="w-full h-[250px] object-cover block md:hidden rounded-xl" />
-                 </div>
-             @endif
+                <div class="w-full" data-aos="fade-up" data-aos-offset="150">
+                    <img src="{{ asset($post->imagen) }}" alt="{{ $post->titulo }}"
+                        class="w-full aspect-[16/10] object-cover rounded-xl" />
+                </div>
+            @endif
 
              <div class="prose prose-lg  max-w-7xl mt-8 text-start" data-aos="fade-up" data-aos-offset="150"
                  data-aos-duration="1000" data-aos-delay="200">
