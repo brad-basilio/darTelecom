@@ -27,7 +27,7 @@
                     <a href="{{ route('detalleBlog', $mostRecentPost->slug) }}">
                         <div class="flex flex-col w-full bg-white bg-opacity-10 overflow-hidden rounded-xl text-left">
                             <div class="flex flex-row justify-center">
-                                <img class="w-full h-[300px]  object-cover rounded-xl"
+                                <img class="w-full aspect-[16/10] object-cover rounded-xl"
                                     src="{{ asset($mostRecentPost->imagen) }}"
                                     onerror="this.onerror=null;this.src='{{ asset('images/img/noimagen.jpg') }}';" />
                             </div>
@@ -54,7 +54,7 @@
                     <div class=" w-full mb-4">
                         <a href="{{ route('detalleBlog', $post->slug) }}" class="flex flex-col md:flex-row gap-4">
                             <div class="w-full md:w-2/5">
-                                <img class="h-full w-full object-cover rounded-xl" src="{{ asset($post->imagen) }}"
+                                <img class="w-full aspect-[16/10] lg:aspect-square object-cover rounded-xl" src="{{ asset($post->imagen) }}"
                                     onerror="this.onerror=null;this.src='{{ asset('images/img/noimagen.jpg') }}';" />
                             </div>
                             <div class="flex flex-col gap-3 justify-center items-start w-full md:w-3/5 p-3 cursor-pointer">
@@ -98,7 +98,7 @@
                                 data-aos-duration="1000" data-aos-delay="200">
                                 <a href="{{ route('detalleBlog', $post->slug) }}">
                                     <div class="flex flex-row justify-center">
-                                        <img class="w-full h-[300px] object-cover rounded-xl"
+                                        <img class="w-full aspect-[16/10] object-cover rounded-xl"
                                             src="{{ asset($post->imagen) }}"
                                             onerror="this.onerror=null;this.src='{{ asset('images/img/noimagen.jpg') }}';" />
                                     </div>
